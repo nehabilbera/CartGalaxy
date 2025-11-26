@@ -1,0 +1,88 @@
+Admin
+GET     ---> /admin
+Response Body
+[
+  {
+    "admin_id": 1,
+    "name": "Neha",
+    "email": "neha@example.com"
+  },
+  {
+    "admin_id": 2,
+    "name": "Rahul",
+    "email": "rahul@example.com"
+  }
+]
+
+
+GET     ---> /admin/{admin_id}
+Response Body
+{
+  "admin_id": 1,
+  "name": "Neha",
+  "email": "neha@example.com"
+}
+
+
+POST    ---> /admin
+Request Body
+{
+  "name": "Neha",
+  "email": "neha@example.com"
+}
+
+Response Body
+{
+  "admin_id": 1,
+  "name": "Neha",
+  "email": "neha@example.com"
+}
+
+
+PUT 	---> /admin
+Request Body
+[
+  {
+    "admin_id": 1,
+    "name": "Neha Updated",
+    "email": "neha.updated@example.com"
+  },
+  {
+    "admin_id": 2,
+    "name": "Rahul Updated",
+    "email": "rahul.updated@example.com"
+  }
+]
+
+Response Body
+[
+  {
+    "admin_id": 1,
+    "name": "Neha Updated",
+    "email": "neha.updated@example.com"
+  },
+  {
+    "admin_id": 2,
+    "name": "Rahul Updated",
+    "email": "rahul.updated@example.com"
+  }
+]
+
+
+PUT 	---> /admin/{admin_id}
+Request Body
+{
+  "admin_id": 1,
+  "name": "Neha Updated",
+  "email": "neha.updated@example.com"
+}
+
+Response Body
+{
+  "admin_id": 1,
+  "name": "Neha Updated",
+  "email": "neha.updated@example.com"
+}
+
+
+DELETE 	---> /admin/{admin_id}

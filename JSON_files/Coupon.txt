@@ -1,0 +1,145 @@
+Coupon
+
+GET     ---> /coupons
+Response Body
+[
+  {
+    "coupon_id": 1,
+    "code": "WELCOME10",
+    "discount": 10,
+    "total": 100,
+    "used_count": 20,
+    "valid_from": "2025-01-01",
+    "valid_to": "2025-12-31",
+    "user_id": 10
+  },
+  {
+    "coupon_id": 2,
+    "code": "OFF20",
+    "discount": 20,
+    "total": 50,
+    "used_count": 5,
+    "valid_from": "2025-02-01",
+    "valid_to": "2025-08-31",
+    "user_id": null
+  }
+]
+
+
+GET     ---> /coupons/{coupon_id}
+Response Body
+{
+  "coupon_id": 1,
+  "code": "WELCOME10",
+  "discount": 10,
+  "total": 100,
+  "used_count": 20,
+  "valid_from": "2025-01-01",
+  "valid_to": "2025-12-31",
+  "user_id": 10
+}
+
+
+POST    ---> /coupons
+Request Body
+{
+  "code": "NEW50",
+  "discount": 50,
+  "total": 20,
+  "used_count": 0,
+  "valid_from": "2025-03-01",
+  "valid_to": "2025-03-31",
+  "user_id": null
+}
+
+Response Body
+{
+  "coupon_id": 1,
+  "code": "NEW50",
+  "discount": 50,
+  "total": 20,
+  "used_count": 0,
+  "valid_from": "2025-03-01",
+  "valid_to": "2025-03-31",
+  "user_id": null
+}
+
+
+PUT 	---> /coupons
+Request Body
+[
+  {
+    "coupon_id": 1,
+    "code": "WELCOME10",
+    "discount": 10,
+    "total": 120,
+    "used_count": 25,
+    "valid_from": "2025-01-01",
+    "valid_to": "2025-12-31",
+    "user_id": 10
+  },
+  {
+    "coupon_id": 2,
+    "code": "OFF20",
+    "discount": 20,
+    "total": 55,
+    "used_count": 10,
+    "valid_from": "2025-02-01",
+    "valid_to": "2025-08-31",
+    "user_id": null
+  }
+]
+
+Response Body
+[
+  {
+    "coupon_id": 1,
+    "code": "WELCOME10",
+    "discount": 10,
+    "total": 120,
+    "used_count": 25,
+    "valid_from": "2025-01-01",
+    "valid_to": "2025-12-31",
+    "user_id": 10
+  },
+  {
+    "coupon_id": 2,
+    "code": "OFF20",
+    "discount": 20,
+    "total": 55,
+    "used_count": 10,
+    "valid_count": 10,
+    "valid_from": "2025-02-01",
+    "valid_to": "2025-08-31",
+    "user_id": null
+  }
+]
+
+
+PUT 	---> /coupons/{coupon_id}
+Request Body
+{
+  "coupon_id": 1,
+  "code": "WELCOME10",
+  "discount": 15,
+  "total": 100,
+  "used_count": 22,
+  "valid_from": "2025-01-01",
+  "valid_to": "2025-12-31",
+  "user_id": 10
+}
+
+Response Body
+{
+  "coupon_id": 1,
+  "code": "WELCOME10",
+  "discount": 15,
+  "total": 100,
+  "used_count": 22,
+  "valid_from": "2025-01-01",
+  "valid_to": "2025-12-31",
+  "user_id": 10
+}
+
+
+DELETE 	---> /coupons/{coupon_id}

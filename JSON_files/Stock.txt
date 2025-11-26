@@ -1,0 +1,98 @@
+Stock
+GET     ---> /stocks
+Response Body
+[
+  {
+    "stock_id": 1,
+    "product_id": 101,
+    "available_quantity": 50,
+    "total_quantity": 100
+  },
+  {
+    "stock_id": 2,
+    "product_id": 102,
+    "available_quantity": 20,
+    "total_quantity": 50
+  }
+]
+
+
+GET     ---> /stocks/{stock_id}
+Response Body
+{
+  "stock_id": 1,
+  "product_id": 101,
+  "available_quantity": 50,
+  "total_quantity": 100
+}
+
+
+POST    ---> /stocks
+Request Body
+{
+  "product_id": 101,
+  "available_quantity": 50,
+  "total_quantity": 100
+}
+
+Response Body
+{
+  "stock_id": 1,
+  "product_id": 101,
+  "available_quantity": 50,
+  "total_quantity": 100
+}
+
+
+PUT 	---> /stocks
+Request Body
+[
+  {
+    "stock_id": 1,
+    "product_id": 101,
+    "available_quantity": 40,
+    "total_quantity": 100
+  },
+  {
+    "stock_id": 2,
+    "product_id": 102,
+    "available_quantity": 25,
+    "total_quantity": 50
+  }
+]
+
+Response Body
+[
+  {
+    "stock_id": 1,
+    "product_id": 101,
+    "available_quantity": 40,
+    "total_quantity": 100
+  },
+  {
+    "stock_id": 2,
+    "product_id": 102,
+    "available_quantity": 25,
+    "total_quantity": 50
+  }
+]
+
+PUT 	---> /stocks/{stock_id}
+Request Body
+{
+  "stock_id": 1,
+  "product_id": 101,
+  "available_quantity": 35,
+  "total_quantity": 100
+}
+
+Response Body
+{
+  "stock_id": 1,
+  "product_id": 101,
+  "available_quantity": 35,
+  "total_quantity": 100
+}
+
+
+DELETE 	---> /stocks/{stock_id}

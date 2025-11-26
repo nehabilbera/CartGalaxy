@@ -1,0 +1,79 @@
+Admin
+GET     ---> /admin
+GET     ---> /admin/{admin_id}
+POST    ---> /admin
+PUT 	---> /admin
+PUT 	---> /admin/{admin_id}
+DELETE 	---> /admin/{admin_id}
+
+
+Product
+GET     ---> /products
+GET     ---> /products/{product_id}
+POST    ---> /products
+PUT 	---> /products
+PUT 	---> /products/{product_id}
+DELETE 	---> /products/{product_id}
+
+
+Stock
+GET     ---> /stocks
+GET     ---> /stocks/{stock_id}
+POST    ---> /stocks
+PUT 	---> /stocks
+PUT 	---> /stocks/{stock_id}
+DELETE 	---> /stocks/{stock_id}
+
+
+User
+GET     ---> /users
+GET     ---> /users/{user_id}
+POST    ---> /users
+PUT 	---> /users
+PUT 	---> /users/{user_id}
+DELETE 	---> /users/{user_id}
+
+
+Cart
+GET     ---> /cart
+GET     ---> /cart/{cart_id}
+POST    ---> /cart
+PUT 	---> /cart
+PUT 	---> /cart/{cart_id}
+DELETE 	---> /cart/{cart_id}
+
+
+Cart_Item
+GET     ---> /cartItems
+GET     ---> /cartItems/{cartItem_id}
+POST    ---> /cartItems
+PUT 	---> /cartItems
+PUT 	---> /cartItems/{cartItem_id}
+DELETE 	---> /cartItems/{cartItem_id}
+
+
+Order
+GET     ---> /orders
+GET     ---> /orders/{order_id}
+POST    ---> /orders
+PUT 	---> /orders
+PUT 	---> /orders/{order_id}
+DELETE 	---> /orders/{order_id}
+
+
+Order_Item
+GET     ---> /orderItems
+GET     ---> /orderItems/{orderItem_id}
+POST    ---> /orderItems
+PUT 	---> /orderItems
+PUT 	---> /orderItems/{orderItem_id}
+DELETE 	---> /orderItems/{orderItem_id}
+
+
+Coupon
+GET     ---> /coupons
+GET     ---> /coupons/{coupon_id}
+POST    ---> /coupons
+PUT 	---> /coupons
+PUT 	---> /coupons/{coupon_id}
+DELETE 	---> /coupons/{coupon_id}

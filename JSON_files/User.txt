@@ -1,0 +1,147 @@
+User
+
+GET     ---> /users
+Response Body
+[
+  {
+    "user_id": 1,
+    "name": "Neha Gupta",
+    "phone": "9876543210",
+    "address": "Sector 12",
+    "city": "Dhanbad",
+    "state": "Jharkhand",
+    "pincode": "201301"
+  },
+  {
+    "user_id": 2,
+    "name": "Charitra Agarwal",
+    "phone": "9123456780",
+    "address": "MG Road",
+    "city": "Delhi",
+    "state": "Delhi",
+    "pincode": "110001"
+  }
+]
+
+
+
+GET     ---> /users/{user_id}
+Response Body
+{
+  "user_id": 1,
+  "name": "Neha Gupta",
+  "phone": "9876543210",
+  "address": "Sector 12",
+  "city": "Dhanbad",
+  "state": "Jharkhand",
+  "pincode": "201301"
+}
+
+
+
+POST    ---> /users
+Request Body
+[
+   {
+     "name": "Nikita Gupta",
+     "phone": "9876543210",
+     "address": "Sector 12",
+     "city": "Noida",
+     "state": "Uttar Pradesh",
+     "pincode": "201301"
+   },
+   {
+     "name": "Shubham Gupta",
+     "phone": "9876543210",
+     "address": "Sector 12",
+     "city": "Banglore",
+     "state": "Banglore",
+     "pincode": "201301"
+   }
+]
+
+
+Response Body
+[
+   {
+     "user_id" : 3,
+     "name": "Nikita Gupta",
+     "phone": "9876543210",
+     "address": "Sector 12",
+     "city": "Noida",
+     "state": "Uttar Pradesh",
+     "pincode": "201301"
+   },
+   {
+     "user_id" : 4,
+     "name": "Shubham Gupta",
+     "phone": "9876543210",
+     "address": "Sector 12",
+     "city": "Banglore",
+     "state": "Banglore",
+     "pincode": "201301"
+   }
+]
+
+
+PUT 	---> /users
+Request Body
+[
+  {
+    "user_id": 1,
+    "name": "Neha Gupta Updated"
+  },
+  {
+    "user_id": 2,
+    "state": "Mumbai",
+    "pincode": "810001"
+  }
+]
+
+
+Response Body
+[
+  {
+    "user_id": 1,
+    "name": "Neha Gupta Updated",
+    "phone": "9876543210",
+    "address": "Sector 12",
+    "city": "Dhanbad",
+    "state": "Jharkhand",
+    "pincode": "201301"
+  },
+  {
+    "user_id": 2,
+    "name": "Charitra Agarwal",
+    "phone": "9123456780",
+    "address": "MG Road",
+    "city": "Delhi",
+    "state": "Mumbai",
+    "pincode": "810001"
+  }
+]
+
+PUT 	---> /users/{user_id}
+Request Body
+{
+  "name": "Neha Updated",
+  "phone": "9876512345",
+  "address": "Sector 10",
+  "city": "Noida",
+  "state": "UP",
+  "pincode": "201310"
+}
+
+Response Body
+{
+  "user_id": 1,
+  "name": "Neha Updated",
+  "phone": "9876512345",
+  "address": "Sector 10",
+  "city": "Noida",
+  "state": "UP",
+  "pincode": "201310"
+}
+
+
+DELETE 	---> /users/{user_id}
