@@ -4,7 +4,7 @@ public class Product {
     private int product_id;
     private float selling_price;
     private float discounted_price;
-    private String description;
+    private String product_name;
     private String brand;
     private String category;
     private String image;
@@ -12,11 +12,11 @@ public class Product {
 
     public Product(){}
 
-    public Product(int product_id, float selling_price, float discounted_price, String description, String brand, String category, String image, Boolean availability){
+    public Product(int product_id, float selling_price, float discounted_price, String product_name, String brand, String category, String image, Boolean availability){
         this.product_id = product_id;
         this.selling_price = selling_price;
         this.discounted_price = discounted_price;
-        this.description = description;
+        this.product_name = product_name;
         this.brand = brand;
         this.category = category;
         this.image = image;
@@ -47,12 +47,12 @@ public class Product {
         this.discounted_price = discounted_price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getProduct_name() {
+        return product_name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
     }
 
     public String getBrand() {

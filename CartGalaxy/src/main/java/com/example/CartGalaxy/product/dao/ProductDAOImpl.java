@@ -29,7 +29,7 @@ public class ProductDAOImpl implements ProductDAO{
                             "product_id INT AUTO_INCREMENT PRIMARY KEY, " +
                             "selling_price FLOAT, " +
                             "discounted_price FLOAT, " +
-                            "description VARCHAR(255), " +
+                            "product_name VARCHAR(255), " +
                             "brand VARCHAR(255), " +
                             "category VARCHAR(255), " +
                             "image VARCHAR(255), " +
@@ -54,7 +54,7 @@ public class ProductDAOImpl implements ProductDAO{
                     rs.getInt("product_id"),
                     rs.getFloat("selling_price"),
                     rs.getFloat("discounted_price"),
-                    rs.getString("description"),
+                    rs.getString("product_name"),
                     rs.getString("brand"),
                     rs.getString("category"),
                     rs.getString("image"),
@@ -77,7 +77,7 @@ public class ProductDAOImpl implements ProductDAO{
             product.setProduct_id(rs.getInt("product_id"));
             product.setSelling_price(rs.getFloat("selling_price"));
             product.setDiscounted_price(rs.getFloat("discounted_price"));
-            product.setDescription(rs.getString("description"));
+            product.setProduct_name(rs.getString("product_name"));
             product.setBrand(rs.getString("brand"));
             product.setCategory(rs.getString("category"));
             product.setImage(rs.getString("image"));
@@ -99,7 +99,7 @@ public class ProductDAOImpl implements ProductDAO{
             PreparedStatement ptst = conn.prepareStatement(query);
             ptst.setFloat(1, pdt.getSelling_price());
             ptst.setFloat(2, pdt.getDiscounted_price());
-            ptst.setString(3, pdt.getDescription());
+            ptst.setString(3, pdt.getProduct_name());
             ptst.setString(4, pdt.getBrand());
             ptst.setString(5, pdt.getCategory());
             ptst.setString(6, pdt.getImage());
@@ -119,7 +119,7 @@ public class ProductDAOImpl implements ProductDAO{
                     rs.getInt("product_id"),
                     rs.getFloat("selling_price"),
                     rs.getFloat("discounted_price"),
-                    rs.getString("description"),
+                    rs.getString("product_name"),
                     rs.getString("brand"),
                     rs.getString("category"),
                     rs.getString("image"),

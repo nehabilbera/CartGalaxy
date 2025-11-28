@@ -10,7 +10,7 @@ public class ProductDTO {
     private int product_id;
     private float selling_price;
     private float discounted_price;
-    private String description;
+    private String product_name;
     private String brand;
     private String category;
     private String image;

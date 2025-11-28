@@ -3,16 +3,17 @@ package com.example.CartGalaxy.order.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 
-public class Order {
+public class OrderDTO {
     private int order_id;
-    private int user_id;
     private LocalDate ordered_date;
     private String status;
     private float transaction_amount;

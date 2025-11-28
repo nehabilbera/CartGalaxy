@@ -5,15 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Order {
-    private int order_id;
-    private int user_id;
+public class GetOrderDTO {
     private LocalDate ordered_date;
     private String status;
     private float transaction_amount;
+    private List<OrderItemDTO> orderItems;
 }
