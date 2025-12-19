@@ -1,43 +1,53 @@
 package com.example.CartGalaxy.stock.controller;
 
 import com.example.CartGalaxy.common.model.ApiResponse;
+import com.example.CartGalaxy.product.exception.ProductNotFoundException;
+import com.example.CartGalaxy.product.model.CreateProductDTO;
+import com.example.CartGalaxy.product.model.ProductDTO;
+import com.example.CartGalaxy.product.model.UpdateProductDTO;
+import com.example.CartGalaxy.product.service.ProductService;
+import com.example.CartGalaxy.stock.model.CreateStockDTO;
 import com.example.CartGalaxy.stock.model.Stock;
+import com.example.CartGalaxy.stock.model.StockDTO;
+import com.example.CartGalaxy.stock.service.StockService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/stocks")
 public class StockController {
 
-    @GetMapping
-    public ApiResponse<List<Stock>> getStockList() {
-        return ApiResponse.success(List.of(), "Get list of all stocks");
+    private final StockService stockService;
+
+    public StockController(StockService stockService) {
+        this.stockService = stockService;
     }
 
-    @GetMapping("/{stock_id}")
-    public ApiResponse<Stock> getStock(@PathVariable int stock_id) {
-        return ApiResponse.success(new Stock(), "Get stock having stock id : " + stock_id);
+    @GetMapping
+    public ApiResponse<List<StockDTO>> getStockList() throws SQLException {
+        return ApiResponse.success(stockService.getStockList(), "Get stock list");
+    }
+
+    @GetMapping("/{product_id}")
+    public ApiResponse<StockDTO> getStock(@PathVariable int product_id) throws SQLException, ProductNotFoundException {
+        return ApiResponse.success(stockService.getStock(product_id), "Get stock having product id : " + product_id);
     }
 
     @PostMapping
-    public ApiResponse<List<Stock>> addStock(@RequestBody List<Stock> stocks) {
-        return ApiResponse.success(stocks, "Stocks added");
+    public ApiResponse<List<StockDTO>> addStocks(@RequestBody List<CreateStockDTO> stocks) throws SQLException {
+        return ApiResponse.success(stockService.createStock(stocks), "Stocks added");
     }
 
     @PutMapping
-    public ApiResponse<List<Stock>> updateStockList(@RequestBody List<Stock> update_stocks) {
-        return ApiResponse.success(update_stocks, "Update stock list");
+    public ApiResponse<List<Stock>> updateStockList(@RequestBody List<Stock> update_stocks){
+        return ApiResponse.success(stockService.updateStockList(update_stocks), "Updated stocks");
     }
 
-    @PutMapping("/{stock_id}")
-    public ApiResponse<Stock> updateStock(@PathVariable int stock_id, @RequestBody Stock update_stock) {
-        return ApiResponse.success(update_stock, "Update stock having stock id : " + stock_id);
-    }
-
-    @DeleteMapping("/{stock_id}")
-    public ApiResponse<String> deleteStock(@PathVariable int stock_id) {
-        return ApiResponse.success("Deleted", "Delete stock having stock id : " + stock_id);
+    @PutMapping("/{product_id}")
+    public ApiResponse<Stock> updateStock(@RequestBody Stock update_stock, @PathVariable int product_id){
+        return ApiResponse.success(stockService.updateStock(update_stock, product_id), "Update stock having product id : " + product_id);
     }
 }

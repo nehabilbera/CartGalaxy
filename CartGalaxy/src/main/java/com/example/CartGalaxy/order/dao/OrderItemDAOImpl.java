@@ -1,6 +1,5 @@
 package com.example.CartGalaxy.order.dao;
 
-import com.example.CartGalaxy.order.model.OrderDTO;
 import com.example.CartGalaxy.order.model.OrderItemDTO;
 import com.example.CartGalaxy.product.dao.ProductDAO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
@@ -22,6 +21,7 @@ public class OrderItemDAOImpl implements OrderItemDAO{
     private DataSource dataSource;
     private final ProductDAO productDAO;
 
+    //TODO: use composite key instead of primary key
     public OrderItemDAOImpl(DataSource dataSource, ProductDAO productDAO) throws SQLException {
         this.dataSource = dataSource;
         this.productDAO = productDAO;
@@ -29,11 +29,11 @@ public class OrderItemDAOImpl implements OrderItemDAO{
             conn = dataSource.getConnection();
             PreparedStatement ptst = conn.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS orderItems (" +
-                            "orderItem_id INT AUTO_INCREMENT PRIMARY KEY, " +
-                            "order_id INT, " +
+                            "order_id VARCHAR(100), " +
                             "product_id INT, " +
                             "quantity INT, " +
-                            "price_at_purchase FLOAT " +
+                            "price_at_purchase FLOAT, " +
+                            "PRIMARY KEY (order_id, product_id)"+
                             ")"
             );
             System.out.println("✅ OrderItem connection established!");
@@ -43,11 +43,11 @@ public class OrderItemDAOImpl implements OrderItemDAO{
     }
 
     @Override
-    public List<OrderItemDTO> getOrderItemList(int order_id) throws SQLException, ProductNotFoundException {
+    public List<OrderItemDTO> getOrderItemList(String order_id) throws SQLException, ProductNotFoundException {
         List<OrderItemDTO> orderItemList = new ArrayList<>();
-//        ProductDTO pdt = productDAO.getProduct(product_id)
-        String query = "SELECT product_id, SUM(quantity) AS quantity, AVG(price_at_purchase) AS price_at_purchase FROM orderItems where order_id = " + order_id + " GROUP BY product_id";
+        String query = "SELECT product_id, SUM(quantity) AS quantity, SUM(price_at_purchase) AS price_at_purchase FROM orderItems where order_id = ? GROUP BY product_id";
         PreparedStatement ptst = conn.prepareStatement(query);
+        ptst.setString(1, order_id);
         ResultSet rs = ptst.executeQuery();
 
         while(rs.next()){
@@ -55,12 +55,14 @@ public class OrderItemDAOImpl implements OrderItemDAO{
             ProductDTO pdt = productDAO.getProduct(productId);
 
             OrderItemDTO ord = new OrderItemDTO(
+                    pdt,
                     rs.getInt("quantity"),
                     rs.getFloat("price_at_purchase")
             );
-            ord.setProduct(pdt);
             orderItemList.add(ord);
         }
+        rs.close();
+        ptst.close();
         return orderItemList;
     }
 }

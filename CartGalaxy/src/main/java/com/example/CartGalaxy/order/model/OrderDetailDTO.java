@@ -10,10 +10,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class GetOrderDTO {
+public class OrderDetailDTO {
     private LocalDate ordered_date;
     private String status;
     private float transaction_amount;
-    private List<OrderItemDTO> orderItems;
+    private List<OrderItemDTO> order_items;
 }

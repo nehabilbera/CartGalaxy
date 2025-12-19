@@ -11,9 +11,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
 public class OrderDTO {
-    private int order_id;
+    private String order_id;
     private LocalDate ordered_date;
     private String status;
     private float transaction_amount;

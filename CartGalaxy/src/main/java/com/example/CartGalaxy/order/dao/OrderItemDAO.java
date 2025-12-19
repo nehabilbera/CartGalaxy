@@ -7,5 +7,5 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface OrderItemDAO {
-        List<OrderItemDTO> getOrderItemList(int order_id) throws SQLException, ProductNotFoundException;
+        List<OrderItemDTO> getOrderItemList(String order_id) throws SQLException, ProductNotFoundException;
 }

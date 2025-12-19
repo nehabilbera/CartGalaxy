@@ -1,10 +1,9 @@
 package com.example.CartGalaxy.order.controller;
 
 import com.example.CartGalaxy.common.model.ApiResponse;
-import com.example.CartGalaxy.order.model.GetOrderDTO;
-import com.example.CartGalaxy.order.model.Order;
+import com.example.CartGalaxy.order.model.CreateOrderDTO;
+import com.example.CartGalaxy.order.model.OrderDetailDTO;
 import com.example.CartGalaxy.order.model.OrderDTO;
-import com.example.CartGalaxy.order.model.OrderItem;
 import com.example.CartGalaxy.order.service.OrderService;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +23,17 @@ public class OrderController {
 
     @GetMapping
     public ApiResponse<List<OrderDTO>> getOrderList() throws SQLException {
+        System.out.println("Controller");
         return ApiResponse.success(orderService.getOrdersList(), "Get Order list");
     }
 
     @GetMapping("/{order_id}")
-    public ApiResponse<GetOrderDTO> getOrder(@PathVariable int order_id) throws SQLException, ProductNotFoundException {
+    public ApiResponse<OrderDetailDTO> getOrder(@PathVariable String order_id) throws SQLException, ProductNotFoundException {
         return ApiResponse.success(orderService.getOrder(order_id), "Get order of order_id : " + order_id);
+    }
+
+    @PostMapping
+    public ApiResponse<OrderDetailDTO> createOrder(@RequestBody CreateOrderDTO order) throws SQLException, ProductNotFoundException {
+        return ApiResponse.success(orderService.createOrder(order), "Order created successfully!");
     }
 }
