@@ -4,6 +4,7 @@ import com.example.CartGalaxy.order.model.*;
 import com.example.CartGalaxy.product.dao.ProductDAO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.product.model.ProductDTO;
+import com.example.CartGalaxy.stock.exception.InsufficientProductException;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -67,7 +68,7 @@ public class OrderDAOImpl implements OrderDAO{
     }
 
     @Override
-    public OrderDetailDTO getOrder(String order_id) throws SQLException, ProductNotFoundException {
+    public OrderDetailDTO getOrder(String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
         List<OrderItemDTO> orderItems;
         orderItems = orderItemDAO.getOrderItemList(order_id);
         String query = "SELECT * FROM orders WHERE order_id= ?";
@@ -88,7 +89,7 @@ public class OrderDAOImpl implements OrderDAO{
     }
 
     @Override
-    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException {
+    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException, InsufficientProductException {
         for(CreateOrderItemDTO orderItem : orderDTO.getOrder_items()){
             int product_id = orderItem.getProduct_id();
             ProductDTO product = productDAO.getProduct(product_id);

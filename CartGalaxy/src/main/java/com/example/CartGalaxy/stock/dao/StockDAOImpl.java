@@ -1,9 +1,6 @@
 package com.example.CartGalaxy.stock.dao;
 
-import com.example.CartGalaxy.order.model.OrderDTO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
-import com.example.CartGalaxy.product.model.CreateProductDTO;
-import com.example.CartGalaxy.product.model.ProductDTO;
 import com.example.CartGalaxy.stock.model.CreateStockDTO;
 import com.example.CartGalaxy.stock.model.Stock;
 import com.example.CartGalaxy.stock.model.StockDTO;
@@ -41,6 +38,16 @@ public class StockDAOImpl implements StockDAO{
             ptst.executeUpdate();
             ptst.close();
         }
+    }
+
+
+    public void updateUsedStock(int product_id, int used_quantity) throws SQLException {
+        String query = "UPDATE stocks " + "SET available_quantity = available_quantity - ? " + "WHERE product_id = ?";
+        PreparedStatement ptst = conn.prepareStatement(query);
+        ptst.setInt(1, used_quantity);
+        ptst.setInt(2, product_id);
+        ptst.executeUpdate();
+        ptst.close();
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.example.CartGalaxy.order.model.CreateOrderDTO;
 import com.example.CartGalaxy.order.model.OrderDetailDTO;
 import com.example.CartGalaxy.order.model.OrderDTO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
+import com.example.CartGalaxy.stock.exception.InsufficientProductException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -26,12 +27,12 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public OrderDetailDTO getOrder(String order_id) throws SQLException, ProductNotFoundException {
+    public OrderDetailDTO getOrder(String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
         return orderDAO.getOrder(order_id);
     }
 
     @Override
-    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException {
+    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException, InsufficientProductException {
         return orderDAO.createOrder(orderDTO);
     }
 }

@@ -4,6 +4,9 @@ import com.example.CartGalaxy.order.model.OrderItemDTO;
 import com.example.CartGalaxy.product.dao.ProductDAO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.product.model.ProductDTO;
+import com.example.CartGalaxy.stock.dao.StockDAO;
+import com.example.CartGalaxy.stock.exception.InsufficientProductException;
+import com.example.CartGalaxy.stock.model.StockDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -18,13 +21,14 @@ import java.util.List;
 public class OrderItemDAOImpl implements OrderItemDAO{
 
     private static Connection conn;
-    private DataSource dataSource;
+    private final DataSource dataSource;
     private final ProductDAO productDAO;
+    private final StockDAO stockDAO;
 
-    //TODO: use composite key instead of primary key
-    public OrderItemDAOImpl(DataSource dataSource, ProductDAO productDAO) throws SQLException {
+    public OrderItemDAOImpl(DataSource dataSource, ProductDAO productDAO, StockDAO stockDAO) throws SQLException {
         this.dataSource = dataSource;
         this.productDAO = productDAO;
+        this.stockDAO = stockDAO;
         if (conn == null) {
             conn = dataSource.getConnection();
             PreparedStatement ptst = conn.prepareStatement(
@@ -43,7 +47,7 @@ public class OrderItemDAOImpl implements OrderItemDAO{
     }
 
     @Override
-    public List<OrderItemDTO> getOrderItemList(String order_id) throws SQLException, ProductNotFoundException {
+    public List<OrderItemDTO> getOrderItemList(String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
         List<OrderItemDTO> orderItemList = new ArrayList<>();
         String query = "SELECT product_id, SUM(quantity) AS quantity, SUM(price_at_purchase) AS price_at_purchase FROM orderItems where order_id = ? GROUP BY product_id";
         PreparedStatement ptst = conn.prepareStatement(query);
@@ -51,12 +55,19 @@ public class OrderItemDAOImpl implements OrderItemDAO{
         ResultSet rs = ptst.executeQuery();
 
         while(rs.next()){
-            int productId = rs.getInt("product_id");       // Get product_id from DB
+            int productId = rs.getInt("product_id");
+            int quantity = rs.getInt("quantity");
+
             ProductDTO pdt = productDAO.getProduct(productId);
+            StockDTO stock = stockDAO.getStock(productId);
+
+            if(stock.getAvailable_quantity()<=0) throw new ProductNotFoundException("Product is out of stock!");
+            else if(stock.getAvailable_quantity()<quantity) throw new InsufficientProductException("Insufficient products available for product id : " + productId);
+            else stockDAO.updateUsedStock(productId, quantity);
 
             OrderItemDTO ord = new OrderItemDTO(
                     pdt,
-                    rs.getInt("quantity"),
+                    quantity,
                     rs.getFloat("price_at_purchase")
             );
             orderItemList.add(ord);

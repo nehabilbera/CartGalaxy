@@ -6,6 +6,7 @@ import com.example.CartGalaxy.order.model.OrderDetailDTO;
 import com.example.CartGalaxy.order.model.OrderDTO;
 import com.example.CartGalaxy.order.service.OrderService;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
+import com.example.CartGalaxy.stock.exception.InsufficientProductException;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -28,12 +29,12 @@ public class OrderController {
     }
 
     @GetMapping("/{order_id}")
-    public ApiResponse<OrderDetailDTO> getOrder(@PathVariable String order_id) throws SQLException, ProductNotFoundException {
+    public ApiResponse<OrderDetailDTO> getOrder(@PathVariable String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
         return ApiResponse.success(orderService.getOrder(order_id), "Get order of order_id : " + order_id);
     }
 
     @PostMapping
-    public ApiResponse<OrderDetailDTO> createOrder(@RequestBody CreateOrderDTO order) throws SQLException, ProductNotFoundException {
+    public ApiResponse<OrderDetailDTO> createOrder(@RequestBody CreateOrderDTO order) throws SQLException, ProductNotFoundException, InsufficientProductException {
         return ApiResponse.success(orderService.createOrder(order), "Order created successfully!");
     }
 }
