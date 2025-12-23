@@ -36,7 +36,7 @@ public class ProductDAOImpl implements ProductDAO{
                             "availability BOOLEAN" +
                             ")"
             );
-            System.out.println("✅ MySQL connection established!");
+            System.out.println("✅ Products connection established!");
             ptst.executeUpdate();
         }
     }

@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface OrderService {
     List<OrderDTO> getOrdersList() throws SQLException;
+    //todo: add order not found exception
     OrderDetailDTO getOrder(String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException;
     OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException, InsufficientProductException;
 }

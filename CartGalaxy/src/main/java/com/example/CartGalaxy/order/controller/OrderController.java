@@ -24,7 +24,6 @@ public class OrderController {
 
     @GetMapping
     public ApiResponse<List<OrderDTO>> getOrderList() throws SQLException {
-        System.out.println("Controller");
         return ApiResponse.success(orderService.getOrdersList(), "Get Order list");
     }
 

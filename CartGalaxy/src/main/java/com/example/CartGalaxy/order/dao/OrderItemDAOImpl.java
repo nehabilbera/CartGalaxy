@@ -30,6 +30,7 @@ public class OrderItemDAOImpl implements OrderItemDAO{
         this.productDAO = productDAO;
         this.stockDAO = stockDAO;
         if (conn == null) {
+
             conn = dataSource.getConnection();
             PreparedStatement ptst = conn.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS orderItems (" +

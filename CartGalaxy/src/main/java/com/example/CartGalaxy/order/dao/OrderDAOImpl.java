@@ -88,6 +88,8 @@ public class OrderDAOImpl implements OrderDAO{
         return orderDetail;
     }
 
+    //todo: make use of atomicity transaction --- savepoint, rollback, commit
+    //todo: make use of db lock to perform database manipulation
     @Override
     public OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException, InsufficientProductException {
         for(CreateOrderItemDTO orderItem : orderDTO.getOrder_items()){

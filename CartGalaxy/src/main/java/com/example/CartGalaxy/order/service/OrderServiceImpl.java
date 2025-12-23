@@ -22,7 +22,6 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<OrderDTO> getOrdersList() throws SQLException {
-        System.out.println("Service");
         return orderDAO.getOrderList();
     }
 
