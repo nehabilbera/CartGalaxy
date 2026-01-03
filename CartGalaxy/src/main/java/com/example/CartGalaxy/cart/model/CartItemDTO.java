@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 public class CartItemDTO {
     private ProductDTO product;
     private int quantity;
-    private float price_at_purchase;
 }
 

@@ -94,7 +94,7 @@ public class ProductDAOImpl implements ProductDAO{
     @Override
     public List<ProductDTO> addProducts(List<CreateProductDTO> products) throws SQLException {
         for(CreateProductDTO pdt : products){
-            String query = "INSERT INTO products (selling_price, discounted_price, description, brand, category, image, availability) " +
+            String query = "INSERT INTO products (selling_price, discounted_price, product_name, brand, category, image, availability) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ptst = conn.prepareStatement(query);
             ptst.setFloat(1, pdt.getSelling_price());

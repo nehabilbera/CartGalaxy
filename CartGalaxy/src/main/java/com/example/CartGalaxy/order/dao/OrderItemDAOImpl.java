@@ -50,7 +50,7 @@ public class OrderItemDAOImpl implements OrderItemDAO{
     @Override
     public List<OrderItemDTO> getOrderItemList(String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
         List<OrderItemDTO> orderItemList = new ArrayList<>();
-        String query = "SELECT product_id, SUM(quantity) AS quantity, SUM(price_at_purchase) AS price_at_purchase FROM orderItems where order_id = ? GROUP BY product_id";
+        String query = "SELECT product_id, SUM(quantity) AS quantity, (SUM(price_at_purchase*quantity)) AS price_at_purchase FROM orderItems where order_id = ? GROUP BY product_id";
         PreparedStatement ptst = conn.prepareStatement(query);
         ptst.setString(1, order_id);
         ResultSet rs = ptst.executeQuery();

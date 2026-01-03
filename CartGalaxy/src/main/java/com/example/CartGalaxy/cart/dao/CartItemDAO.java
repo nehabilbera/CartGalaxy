@@ -11,4 +11,5 @@ import java.util.List;
 @Service
 public interface CartItemDAO {
     List<CartItemDTO> getAllCartItems(int cart_id) throws SQLException, ProductNotFoundException;
+    void deleteCartItems(int user_id) throws SQLException;
 }

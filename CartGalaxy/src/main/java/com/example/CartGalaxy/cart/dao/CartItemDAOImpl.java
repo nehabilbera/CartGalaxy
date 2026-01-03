@@ -28,38 +28,35 @@ public class CartItemDAOImpl implements CartItemDAO{
             conn = dataSource.getConnection();
             PreparedStatement ptst = conn.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS cartItems (" +
-                            "cart_item_id INT PRIMARY KEY AUTO_INCREMENT," +
-                            "cart_id INT," +
+                            "user_id INT," +
                             "product_id INT," +
                             "quantity INT," +
-                            "price_at_purchase FLOAT," +
-                            "FOREIGN KEY (cart_id) REFERENCES cart(cart_id)," +
+                            "PRIMARY KEY (user_id, product_id)," +
+                            "FOREIGN KEY (user_id) REFERENCES cart(user_id)," +
                             "FOREIGN KEY (product_id) REFERENCES products(product_id)" +
                             ")"
             );
-            System.out.println("✅ CartItems connection established!");
+            System.out.println("✅ CartItem connection established!");
             ptst.executeUpdate();
             ptst.close();
         }
     }
 
     @Override
-    public List<CartItemDTO> getAllCartItems(int cart_id) throws SQLException, ProductNotFoundException {
+    public List<CartItemDTO> getAllCartItems(int user_id) throws SQLException, ProductNotFoundException {
         List<CartItemDTO> cartItemList = new ArrayList<>();
-        String query = "SELECT product_id, SUM(quantity) AS quantity, SUM(price_at_purchase) AS price_at_purchase FROM cartItems WHERE cart_id = ? GROUP BY product_id";
+        String query = "SELECT product_id, SUM(quantity) AS quantity FROM cartItems WHERE user_id = ? GROUP BY product_id";
         PreparedStatement ptst = conn.prepareStatement(query);
-        ptst.setInt(1, cart_id);
+        ptst.setInt(1, user_id);
         ResultSet rs = ptst.executeQuery();
 
         while(rs.next()){
             int productId = rs.getInt("product_id");
             ProductDTO pdt = productDAO.getProduct(productId);
             int quantity = rs.getInt("quantity");
-            float total_price = pdt.getDiscounted_price()*quantity;
             CartItemDTO cartItemDTO = new CartItemDTO(
                     pdt,
-                    quantity,
-                    total_price
+                    quantity
             );
             cartItemList.add(cartItemDTO);
         }
@@ -67,4 +64,15 @@ public class CartItemDAOImpl implements CartItemDAO{
         ptst.close();
         return cartItemList;
     }
+
+    @Override
+    public void deleteCartItems(int user_id) throws SQLException {
+        PreparedStatement ptst1 = conn.prepareStatement(
+                "DELETE FROM cartitems WHERE user_id = ?"
+        );
+        ptst1.setInt(1, user_id);
+        ptst1.executeUpdate();
+        ptst1.close();
+    }
+
 }

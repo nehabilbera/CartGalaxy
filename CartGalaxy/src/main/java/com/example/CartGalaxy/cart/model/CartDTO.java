@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDTO {
-    private int cart_id;
     private int user_id;
     private List<CartItemDTO> cart_items;
     private int total_items;

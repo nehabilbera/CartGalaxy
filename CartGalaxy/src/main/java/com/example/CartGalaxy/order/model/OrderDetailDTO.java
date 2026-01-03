@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDetailDTO {
+    private String order_id;
     private LocalDate ordered_date;
     private String status;
     private float transaction_amount;

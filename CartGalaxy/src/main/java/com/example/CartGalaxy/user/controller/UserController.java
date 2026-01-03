@@ -1,23 +1,32 @@
 package com.example.CartGalaxy.user.controller;
 
 import com.example.CartGalaxy.common.model.ApiResponse;
+import com.example.CartGalaxy.user.exception.UserNotFoundException;
 import com.example.CartGalaxy.user.model.User;
+import com.example.CartGalaxy.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping
     public ApiResponse<List<User>> getUserList(){
         return ApiResponse.success(List.of(), "Get User list");
     }
 
     @GetMapping("/{user_id}")
-    public ApiResponse<User> getUser(@PathVariable int user_id){
-        return ApiResponse.success(new User(), "Get user having user id : " + user_id);
+    public ApiResponse<Boolean> getUser(@PathVariable int user_id) throws UserNotFoundException, SQLException {
+        return ApiResponse.success(userService.getUser(user_id), "Get user having user id : " + user_id);
     }
 
     @PostMapping
