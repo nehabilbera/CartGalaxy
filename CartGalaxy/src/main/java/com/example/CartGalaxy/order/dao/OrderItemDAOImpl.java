@@ -29,22 +29,6 @@ public class OrderItemDAOImpl implements OrderItemDAO{
         this.dataSource = dataSource;
         this.productDAO = productDAO;
         this.stockDAO = stockDAO;
-        if (conn == null) {
-
-            conn = dataSource.getConnection();
-            PreparedStatement ptst = conn.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS orderItems (" +
-                            "order_id VARCHAR(100), " +
-                            "product_id INT, " +
-                            "quantity INT, " +
-                            "price_at_purchase FLOAT, " +
-                            "PRIMARY KEY (order_id, product_id)"+
-                            ")"
-            );
-            System.out.println("✅ OrderItem connection established!");
-            ptst.executeUpdate();
-            ptst.close();
-        }
     }
 
     @Override

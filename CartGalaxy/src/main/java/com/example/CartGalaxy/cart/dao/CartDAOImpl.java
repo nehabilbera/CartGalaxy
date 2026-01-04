@@ -25,20 +25,6 @@ public class CartDAOImpl implements CartDAO{
         this.cartItemDAO = cartItemDAO;
         this.dataSource = dataSource;
         this.productDAO = productDAO;
-        if(conn == null){
-            conn = dataSource.getConnection();
-            PreparedStatement ptst = conn.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS cart (" +
-                            "user_id INT PRIMARY KEY, " +
-                            "created_at DATETIME, " +
-                            "status VARCHAR(20), "+
-                            "FOREIGN KEY (user_id) REFERENCES users(user_id) " +
-                            ")"
-            );
-            System.out.println("✅ Cart connection established!");
-            ptst.executeUpdate();
-            ptst.close();
-        }
     }
 
     @Override

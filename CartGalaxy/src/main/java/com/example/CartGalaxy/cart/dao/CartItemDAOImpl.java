@@ -24,22 +24,6 @@ public class CartItemDAOImpl implements CartItemDAO{
     public CartItemDAOImpl(ProductDAO productDAO, DataSource dataSource) throws SQLException {
         this.productDAO = productDAO;
         this.dataSource = dataSource;
-        if (conn == null) {
-            conn = dataSource.getConnection();
-            PreparedStatement ptst = conn.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS cartItems (" +
-                            "user_id INT," +
-                            "product_id INT," +
-                            "quantity INT," +
-                            "PRIMARY KEY (user_id, product_id)," +
-                            "FOREIGN KEY (user_id) REFERENCES cart(user_id)," +
-                            "FOREIGN KEY (product_id) REFERENCES products(product_id)" +
-                            ")"
-            );
-            System.out.println("✅ CartItem connection established!");
-            ptst.executeUpdate();
-            ptst.close();
-        }
     }
 
     @Override

@@ -22,23 +22,6 @@ public class ProductDAOImpl implements ProductDAO{
 
     public ProductDAOImpl(DataSource dataSource) throws SQLException {
         this.dataSource = dataSource;
-        if(conn == null){
-            conn = dataSource.getConnection();
-            PreparedStatement ptst = conn.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS products (" +
-                            "product_id INT AUTO_INCREMENT PRIMARY KEY, " +
-                            "selling_price FLOAT, " +
-                            "discounted_price FLOAT, " +
-                            "product_name VARCHAR(255), " +
-                            "brand VARCHAR(255), " +
-                            "category VARCHAR(255), " +
-                            "image VARCHAR(255), " +
-                            "availability BOOLEAN" +
-                            ")"
-            );
-            System.out.println("✅ Products connection established!");
-            ptst.executeUpdate();
-        }
     }
 
 

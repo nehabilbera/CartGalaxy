@@ -31,23 +31,6 @@ public class OrderDAOImpl implements OrderDAO{
         this.productDAO = productDAO;
         this.stockDAO = stockDAO;
         this.cartDAO = cartDAO;
-
-
-        if(conn == null){
-            conn = dataSource.getConnection();
-            PreparedStatement ptst = conn.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS orders (" +
-                            "order_id VARCHAR(100) PRIMARY KEY, " +
-                            "user_id INT, " +
-                            "ordered_date DATE, " +
-                            "status VARCHAR(255), " +
-                            "transaction_amount FLOAT " +
-                            ")"
-            );
-            System.out.println("✅ Order connection established!");
-            ptst.executeUpdate();
-            ptst.close();
-        }
     }
 
     private static String generateOrderId(){

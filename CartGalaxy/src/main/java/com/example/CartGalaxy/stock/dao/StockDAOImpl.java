@@ -22,22 +22,6 @@ public class StockDAOImpl implements StockDAO{
 
     public StockDAOImpl(DataSource dataSource) throws SQLException {
         this.dataSource = dataSource;
-        if(conn == null){
-            conn = dataSource.getConnection();
-            PreparedStatement ptst = conn.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS stocks (" +
-                            "stock_id INT AUTO_INCREMENT PRIMARY KEY, " +
-                            "product_id INT, " +
-                            "available_quantity INT, " +
-                            "total_quantity INT, " +
-                            "FOREIGN KEY (product_id) REFERENCES products(product_id)" +
-                            ")"
-
-            );
-            System.out.println("✅ Stock connection established!");
-            ptst.executeUpdate();
-            ptst.close();
-        }
     }
 
 

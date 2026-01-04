@@ -19,18 +19,6 @@ public class UserDAOImpl implements UserDAO{
 
     public UserDAOImpl(DataSource dataSource) throws SQLException {
         this.dataSource = dataSource;
-        if(conn == null){
-            conn = dataSource.getConnection();
-            PreparedStatement ptst = conn.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS users (" +
-                            "user_id INT PRIMARY KEY," +
-                            "username VARCHAR(100)" +
-                            ")"
-            );
-            ptst.executeUpdate();
-            System.out.println("✅ users table created");
-            ptst.close();
-        }
     }
 
 
