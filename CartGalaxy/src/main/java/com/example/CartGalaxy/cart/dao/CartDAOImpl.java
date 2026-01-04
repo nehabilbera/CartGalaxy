@@ -25,6 +25,10 @@ public class CartDAOImpl implements CartDAO{
         this.cartItemDAO = cartItemDAO;
         this.dataSource = dataSource;
         this.productDAO = productDAO;
+        if(conn == null){
+            conn = dataSource.getConnection();
+            System.out.println("✅ Cart table created");
+        }
     }
 
     @Override

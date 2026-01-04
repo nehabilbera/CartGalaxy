@@ -22,8 +22,11 @@ public class StockDAOImpl implements StockDAO{
 
     public StockDAOImpl(DataSource dataSource) throws SQLException {
         this.dataSource = dataSource;
+        if(conn == null){
+            conn = dataSource.getConnection();
+            System.out.println("✅ Stock table created");
+        }
     }
-
 
     public void updateUsedStock(int product_id, int used_quantity) throws SQLException {
         String query = "UPDATE stocks " + "SET available_quantity = available_quantity - ? " + "WHERE product_id = ?";

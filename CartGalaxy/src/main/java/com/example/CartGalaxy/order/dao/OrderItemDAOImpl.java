@@ -29,6 +29,10 @@ public class OrderItemDAOImpl implements OrderItemDAO{
         this.dataSource = dataSource;
         this.productDAO = productDAO;
         this.stockDAO = stockDAO;
+        if(conn == null){
+            conn = dataSource.getConnection();
+            System.out.println("✅ OrderItems table created");
+        }
     }
 
     @Override

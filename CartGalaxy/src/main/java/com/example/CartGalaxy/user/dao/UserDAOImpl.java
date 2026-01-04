@@ -1,8 +1,9 @@
 package com.example.CartGalaxy.user.dao;
 
-import com.example.CartGalaxy.cart.exception.CartNotExistsException;
 import com.example.CartGalaxy.user.exception.UserNotFoundException;
-import com.example.CartGalaxy.user.model.User;
+import com.example.CartGalaxy.user.model.CreateUserDTO;
+import com.example.CartGalaxy.user.model.LoginUserDTO;
+import com.example.CartGalaxy.user.model.UserDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -19,25 +20,68 @@ public class UserDAOImpl implements UserDAO{
 
     public UserDAOImpl(DataSource dataSource) throws SQLException {
         this.dataSource = dataSource;
+        if(conn == null){
+            conn = dataSource.getConnection();
+            System.out.println("✅ users table created");
+        }
     }
 
-
     @Override
-    public Boolean getUser(int user_id) throws SQLException, UserNotFoundException {
+    public UserDTO getUserById(int user_id) throws SQLException, UserNotFoundException {
         String query = "SELECT * FROM users WHERE user_id=?";
         PreparedStatement ptst = conn.prepareStatement(query);
         ptst.setInt(1, user_id);
         ResultSet rs = ptst.executeQuery();
 
-        User user = new User();
+        UserDTO user = new UserDTO();
 
         if(rs.next()){
             user.setUser_id(rs.getInt("user_id"));
-            user.setUsername(rs.getString("username"));
+            user.setUser_email(rs.getString("user_email"));
         }
         else{
-            throw new UserNotFoundException("User Not Found");
+            throw new UserNotFoundException("User Not Found with id : "+user_id);
         }
-        return true;
+        return user;
+    }
+
+    @Override
+    public UserDTO getUserByEmail(String user_email) throws SQLException, UserNotFoundException {
+        String query = "SELECT * FROM users WHERE user_email=?";
+        PreparedStatement ptst = conn.prepareStatement(query);
+        ptst.setString(1, user_email);
+        ResultSet rs = ptst.executeQuery();
+
+        UserDTO user = new UserDTO();
+
+        if(rs.next()){
+            user.setUser_id(rs.getInt("user_id"));
+            user.setUser_email(rs.getString("user_email"));
+            return user;
+        }
+        else{
+            throw new UserNotFoundException("User Not Found with email : "+ user_email);
+        }
+    }
+
+    @Override
+    public UserDTO createUser(CreateUserDTO userDTO) throws SQLException, UserNotFoundException {
+        PreparedStatement ptst = conn.prepareStatement(
+                "INSERT INTO users (user_email, user_password) VALUES (?,?)"
+        );
+        ptst.setString(1, userDTO.getUser_email());
+        ptst.setString(2, userDTO.getUser_password());
+        int rs = ptst.executeUpdate();
+        return getUserByEmail(userDTO.getUser_email());
+    }
+
+    @Override
+    public Boolean validateUser(LoginUserDTO userDTO) throws SQLException {
+        String query = "SELECT * FROM users WHERE user_email=? AND user_password=?";
+        PreparedStatement ptst = conn.prepareStatement(query);
+        ptst.setString(1, userDTO.getUser_email());
+        ptst.setString(2, userDTO.getUser_password());
+        ResultSet rs = ptst.executeQuery();
+        return rs.next();
     }
 }

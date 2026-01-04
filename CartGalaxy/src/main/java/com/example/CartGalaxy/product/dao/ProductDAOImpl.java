@@ -22,6 +22,10 @@ public class ProductDAOImpl implements ProductDAO{
 
     public ProductDAOImpl(DataSource dataSource) throws SQLException {
         this.dataSource = dataSource;
+        if(conn == null){
+            conn = dataSource.getConnection();
+            System.out.println("✅ Product table created");
+        }
     }
 
 

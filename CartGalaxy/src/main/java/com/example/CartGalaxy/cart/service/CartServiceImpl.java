@@ -16,6 +16,7 @@ import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.stock.exception.InsufficientProductException;
 import com.example.CartGalaxy.user.dao.UserDAO;
 import com.example.CartGalaxy.user.exception.UserNotFoundException;
+import com.example.CartGalaxy.user.model.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -52,7 +53,7 @@ public class CartServiceImpl implements CartService{
 
     @Override
     public OrderDetailDTO checkout(int user_id) throws UserNotFoundException, SQLException, CartNotExistsException, ProductNotFoundException, InsufficientProductException {
-        Boolean userCheck = userDAO.getUser(user_id);
+        UserDTO userCheck = userDAO.getUserById(user_id);
         Boolean cartCheck = cartDAO.cartExists(user_id);
         List<CartItemDTO> cartItemDTO = cartItemDAO.getAllCartItems(user_id);
         List<CreateOrderItemDTO> createOrderItemDTOList = new ArrayList<>();

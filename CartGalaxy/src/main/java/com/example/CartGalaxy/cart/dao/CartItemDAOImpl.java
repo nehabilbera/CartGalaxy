@@ -24,6 +24,10 @@ public class CartItemDAOImpl implements CartItemDAO{
     public CartItemDAOImpl(ProductDAO productDAO, DataSource dataSource) throws SQLException {
         this.productDAO = productDAO;
         this.dataSource = dataSource;
+        if(conn == null){
+            conn = dataSource.getConnection();
+            System.out.println("✅ CartItems table created");
+        }
     }
 
     @Override

@@ -1,8 +1,13 @@
 package com.example.CartGalaxy.user.controller;
 
 import com.example.CartGalaxy.common.model.ApiResponse;
+import com.example.CartGalaxy.user.exception.InvalidUserCredentialException;
+import com.example.CartGalaxy.user.exception.UserAlreadyExistsException;
 import com.example.CartGalaxy.user.exception.UserNotFoundException;
+import com.example.CartGalaxy.user.model.CreateUserDTO;
+import com.example.CartGalaxy.user.model.LoginUserDTO;
 import com.example.CartGalaxy.user.model.User;
+import com.example.CartGalaxy.user.model.UserDTO;
 import com.example.CartGalaxy.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,33 +24,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ApiResponse<List<User>> getUserList(){
-        return ApiResponse.success(List.of(), "Get User list");
+    @PostMapping("/register")
+    public UserDTO userRegistration(@RequestBody CreateUserDTO userDTO) throws SQLException, UserNotFoundException, UserAlreadyExistsException {
+        return userService.userRegistration(userDTO);
     }
-
-    @GetMapping("/{user_id}")
-    public ApiResponse<Boolean> getUser(@PathVariable int user_id) throws UserNotFoundException, SQLException {
-        return ApiResponse.success(userService.getUser(user_id), "Get user having user id : " + user_id);
+    @PostMapping("/login")
+    public UserDTO userLogin(@RequestBody LoginUserDTO userDTO) throws UserNotFoundException, SQLException, InvalidUserCredentialException {
+        return userService.userLogin(userDTO);
     }
-
-    @PostMapping
-    public ApiResponse<List<User>> addUsers(@RequestBody List<User> users){
-        return ApiResponse.success(users, "Users added");
-    }
-
-    @PutMapping
-    public ApiResponse<List<User>> updateUserList(@RequestBody List<User> update_users){
-        return ApiResponse.success(update_users, "Updated users");
-    }
-
-    @PutMapping("/{user_id}")
-    public ApiResponse<User> updateUser(@RequestBody User update_user, @PathVariable int user_id){
-        return ApiResponse.success(update_user, "Update user having user id : " + user_id);
-    }
-
-    @DeleteMapping("/{user_id}")
-    public ApiResponse<String> deleteUser(@PathVariable int user_id){
-        return ApiResponse.success("Deleted", "Delete user having user id : " + user_id);
+    @PostMapping("/logout")
+    public UserDTO userLogout(){
+        return null;
     }
 }

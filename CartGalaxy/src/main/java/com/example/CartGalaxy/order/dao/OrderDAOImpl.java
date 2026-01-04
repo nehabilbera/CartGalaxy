@@ -31,6 +31,10 @@ public class OrderDAOImpl implements OrderDAO{
         this.productDAO = productDAO;
         this.stockDAO = stockDAO;
         this.cartDAO = cartDAO;
+        if(conn == null){
+            conn = dataSource.getConnection();
+            System.out.println("✅ Order table created");
+        }
     }
 
     private static String generateOrderId(){

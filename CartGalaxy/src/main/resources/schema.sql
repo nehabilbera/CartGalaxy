@@ -1,7 +1,8 @@
 --users
  CREATE TABLE IF NOT EXISTS users (   
-    user_id INT PRIMARY KEY,
-    username VARCHAR(100)
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_email VARCHAR(100) NOT NULL UNIQUE,
+    user_password VARCHAR(300) NOT NULL
  ) ;
 
 
