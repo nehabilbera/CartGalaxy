@@ -14,5 +14,5 @@ public interface StockDAO {
     List<StockDTO> createStock(List<CreateStockDTO> stocks) throws SQLException;
     void updateUsedStock(int product_id, int used_quantity) throws SQLException;
     List<Stock> updateStockList(List<Stock> update_stock);
-    Stock updateStock(Stock update_stock, int product_id);
+    StockDTO updateStock(CreateStockDTO update_stock) throws SQLException, ProductNotFoundException;
 }

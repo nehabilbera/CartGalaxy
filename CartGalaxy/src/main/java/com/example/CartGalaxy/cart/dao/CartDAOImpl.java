@@ -6,6 +6,7 @@ import com.example.CartGalaxy.cart.model.*;
 import com.example.CartGalaxy.product.dao.ProductDAO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.product.model.ProductDTO;
+import com.example.CartGalaxy.stock.exception.InsufficientProductException;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -32,7 +33,7 @@ public class CartDAOImpl implements CartDAO{
     }
 
     @Override
-    public CartDTO getCart(int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException {
+    public CartDTO getCart(int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException, InsufficientProductException {
         String query = "SELECT * FROM cart WHERE user_id=?";
         PreparedStatement ptst = conn.prepareStatement(query);
         ptst.setInt(1, user_id);
@@ -75,12 +76,14 @@ public class CartDAOImpl implements CartDAO{
         return rs.next();
     }
 
+
+    //todo: TCL -- stock insufficient tha fir v db me add ho gya--rollback to any exception
     @Override
-    public CartDTO createCart(CreateCartDTO createCartDTO) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException {
+    public CartDTO createCart(CreateCartDTO createCartDTO, int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException, InsufficientProductException {
         PreparedStatement userCheck = conn.prepareStatement(
                 "SELECT user_id FROM users WHERE user_id = ?"
         );
-        userCheck.setInt(1, createCartDTO.getUser_id());
+        userCheck.setInt(1, user_id);
         ResultSet userRs = userCheck.executeQuery();
 
         if (!userRs.next()) {
@@ -90,14 +93,14 @@ public class CartDAOImpl implements CartDAO{
         PreparedStatement cartCheck = conn.prepareStatement(
                 "SELECT user_id FROM cart WHERE user_id = ?"
         );
-        cartCheck.setInt(1, createCartDTO.getUser_id());
+        cartCheck.setInt(1, user_id);
         ResultSet cartRs = cartCheck.executeQuery();
 
         if (!cartRs.next()) {
             PreparedStatement insertCart = conn.prepareStatement(
                     "INSERT INTO cart (user_id, created_at, status) VALUES (?, ?, ?)"
             );
-            insertCart.setInt(1, createCartDTO.getUser_id());
+            insertCart.setInt(1, user_id);
             insertCart.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             insertCart.setString(3, "ACTIVE");
             insertCart.executeUpdate();
@@ -125,9 +128,9 @@ public class CartDAOImpl implements CartDAO{
             int quantity = cartItem.getQuantity();
 
             String query2 =  "INSERT INTO cartItems (user_id, product_id, quantity) " +
-                    "VALUES (?, ?, ?) ";
+                    "VALUES (?, ?, ?)";
             PreparedStatement ptst2 = conn.prepareStatement(query2);
-            ptst2.setInt(1, createCartDTO.getUser_id());
+            ptst2.setInt(1, user_id);
             ptst2.setInt(2, product_id);
             ptst2.setInt(3, quantity);
 
@@ -135,11 +138,11 @@ public class CartDAOImpl implements CartDAO{
             ptst2.close();
         }
 
-        return getCart(createCartDTO.getUser_id());
+        return getCart(user_id);
     }
 
     @Override
-    public CartDTO updateCart(CreateCartDTO createCartDTO) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException {
+    public CartDTO updateCart(CreateCartDTO createCartDTO, int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException, InsufficientProductException {
         for (CreateCartItemDTO item : createCartDTO.getCreateCartItemDTOList()) {
             productDAO.getProduct(item.getProduct_id());
         }
@@ -157,7 +160,7 @@ public class CartDAOImpl implements CartDAO{
                 String query1 = "UPDATE cartitems SET quantity = ? WHERE user_id = ? AND product_id = ?";
                 PreparedStatement ptst1 = conn.prepareStatement(query1);
                 ptst1.setInt(1, new_quantity);
-                ptst1.setInt(2, createCartDTO.getUser_id());
+                ptst1.setInt(2, user_id);
                 ptst1.setInt(3, product_id);
                 ptst1.executeUpdate();
                 ptst1.close();
@@ -165,7 +168,7 @@ public class CartDAOImpl implements CartDAO{
             else{
                 String query2 = "INSERT INTO cartitems (user_id, product_id, quantity) VALUES (?,?,?)";
                 PreparedStatement ptst2 = conn.prepareStatement(query2);
-                ptst2.setInt(1, createCartDTO.getUser_id());
+                ptst2.setInt(1, user_id);
                 ptst2.setInt(2, item.getProduct_id());
                 ptst2.setInt(3, item.getQuantity());
                 ptst2.addBatch();
@@ -174,7 +177,7 @@ public class CartDAOImpl implements CartDAO{
             }
         }
 
-        return getCart(createCartDTO.getUser_id());
+        return getCart(user_id);
     }
 
     @Override

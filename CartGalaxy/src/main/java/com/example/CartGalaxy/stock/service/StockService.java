@@ -11,7 +11,8 @@ import java.util.List;
 public interface  StockService {
     List<StockDTO> getStockList() throws SQLException;
     StockDTO getStock(int product_id) throws SQLException, ProductNotFoundException;
-    List<StockDTO> createStock(List<CreateStockDTO> stocks) throws SQLException;
+    List<StockDTO> createStock(List<CreateStockDTO> stocks) throws SQLException, ProductNotFoundException;
     List<Stock> updateStockList(List<Stock> update_stock);
-    Stock updateStock(Stock update_stock, int product_id);
+
+    StockDTO updateStock(CreateStockDTO update_stock) throws SQLException, ProductNotFoundException;
 }

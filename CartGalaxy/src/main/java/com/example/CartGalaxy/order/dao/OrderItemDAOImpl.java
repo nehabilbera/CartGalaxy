@@ -50,10 +50,6 @@ public class OrderItemDAOImpl implements OrderItemDAO{
             ProductDTO pdt = productDAO.getProduct(productId);
             StockDTO stock = stockDAO.getStock(productId);
 
-            if(stock.getAvailable_quantity()<=0) throw new ProductNotFoundException("Product is out of stock!");
-            else if(stock.getAvailable_quantity()<quantity) throw new InsufficientProductException("Insufficient products available for product id : " + productId);
-            else stockDAO.updateUsedStock(productId, quantity);
-
             OrderItemDTO ord = new OrderItemDTO(
                     pdt,
                     quantity,

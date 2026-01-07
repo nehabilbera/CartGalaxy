@@ -9,6 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateOrderDTO {
-    private int user_id;
+
     private List<CreateOrderItemDTO> order_items;
 }

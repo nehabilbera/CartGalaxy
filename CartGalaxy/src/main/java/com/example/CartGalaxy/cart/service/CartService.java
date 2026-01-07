@@ -12,7 +12,7 @@ import com.example.CartGalaxy.user.exception.UserNotFoundException;
 import java.sql.SQLException;
 
 public interface CartService {
-    CartDTO getCart(int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException;
-    CartDTO createCart(CreateCartDTO createCartDTO) throws SQLException, UserNotExistsException, ProductNotFoundException, CartNotExistsException, UserNotFoundException;
-    OrderDetailDTO checkout(int user_id) throws UserNotFoundException, SQLException, CartNotExistsException, ProductNotFoundException, InsufficientProductException;
+    CartDTO getCart(int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException, InsufficientProductException;
+    CartDTO createCart(CreateCartDTO createCartDTO, int user_id) throws SQLException, UserNotExistsException, ProductNotFoundException, CartNotExistsException, UserNotFoundException, InsufficientProductException;
+    OrderDetailDTO checkout(int user_id) throws UserNotFoundException, SQLException, CartNotExistsException, ProductNotFoundException, InsufficientProductException, UserNotExistsException;
 }

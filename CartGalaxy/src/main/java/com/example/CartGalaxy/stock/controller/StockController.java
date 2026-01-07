@@ -10,8 +10,11 @@ import com.example.CartGalaxy.stock.model.CreateStockDTO;
 import com.example.CartGalaxy.stock.model.Stock;
 import com.example.CartGalaxy.stock.model.StockDTO;
 import com.example.CartGalaxy.stock.service.StockService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,27 +30,37 @@ public class StockController {
     }
 
     @GetMapping
-    public ApiResponse<List<StockDTO>> getStockList() throws SQLException {
+    public ApiResponse<List<StockDTO>> getStockList(HttpSession httpSession) throws SQLException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(stockService.getStockList(), "Get stock list");
     }
 
     @GetMapping("/{product_id}")
-    public ApiResponse<StockDTO> getStock(@PathVariable int product_id) throws SQLException, ProductNotFoundException {
+    public ApiResponse<StockDTO> getStock(@PathVariable int product_id, HttpSession httpSession) throws SQLException, ProductNotFoundException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(stockService.getStock(product_id), "Get stock having product id : " + product_id);
     }
 
     @PostMapping
-    public ApiResponse<List<StockDTO>> addStocks(@RequestBody List<CreateStockDTO> stocks) throws SQLException {
+    public ApiResponse<List<StockDTO>> addStocks(@RequestBody List<CreateStockDTO> stocks, HttpSession httpSession) throws SQLException, ProductNotFoundException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(stockService.createStock(stocks), "Stocks added");
     }
 
     @PutMapping
-    public ApiResponse<List<Stock>> updateStockList(@RequestBody List<Stock> update_stocks){
+    public ApiResponse<List<Stock>> updateStockList(@RequestBody List<Stock> update_stocks, HttpSession httpSession){
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(stockService.updateStockList(update_stocks), "Updated stocks");
     }
 
     @PutMapping("/{product_id}")
-    public ApiResponse<Stock> updateStock(@RequestBody Stock update_stock, @PathVariable int product_id){
-        return ApiResponse.success(stockService.updateStock(update_stock, product_id), "Update stock having product id : " + product_id);
+    public ApiResponse<StockDTO> updateStock(@RequestBody CreateStockDTO update_stock, @PathVariable int product_id, HttpSession httpSession) throws SQLException, ProductNotFoundException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
+        return ApiResponse.success(stockService.updateStock(update_stock), "Update stock having product id : " + product_id);
     }
 }

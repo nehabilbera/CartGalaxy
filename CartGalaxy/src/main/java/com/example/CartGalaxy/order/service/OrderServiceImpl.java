@@ -1,5 +1,7 @@
 package com.example.CartGalaxy.order.service;
 
+import com.example.CartGalaxy.cart.exception.CartNotExistsException;
+import com.example.CartGalaxy.cart.exception.UserNotExistsException;
 import com.example.CartGalaxy.order.dao.OrderDAO;
 import com.example.CartGalaxy.order.model.CreateOrderDTO;
 import com.example.CartGalaxy.order.model.OrderDetailDTO;
@@ -31,7 +33,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException, InsufficientProductException {
-        return orderDAO.createOrder(orderDTO);
+    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO, int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException, CartNotExistsException, UserNotExistsException {
+        return orderDAO.createOrder(orderDTO, user_id);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.CartGalaxy.order.service;
 
+import com.example.CartGalaxy.cart.exception.CartNotExistsException;
+import com.example.CartGalaxy.cart.exception.UserNotExistsException;
 import com.example.CartGalaxy.order.model.CreateOrderDTO;
 import com.example.CartGalaxy.order.model.OrderDetailDTO;
 import com.example.CartGalaxy.order.model.OrderDTO;
@@ -13,5 +15,5 @@ public interface OrderService {
     List<OrderDTO> getOrdersList() throws SQLException;
     //todo: add order not found exception
     OrderDetailDTO getOrder(String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException;
-    OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException, InsufficientProductException;
+    OrderDetailDTO createOrder(CreateOrderDTO orderDTO, int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException, CartNotExistsException, UserNotExistsException;
 }

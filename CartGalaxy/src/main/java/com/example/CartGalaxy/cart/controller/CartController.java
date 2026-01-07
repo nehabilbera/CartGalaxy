@@ -10,7 +10,10 @@ import com.example.CartGalaxy.order.model.OrderDetailDTO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.stock.exception.InsufficientProductException;
 import com.example.CartGalaxy.user.exception.UserNotFoundException;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 
@@ -24,18 +27,27 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/{user_id}")
-    public ApiResponse<CartDTO> getCart(@PathVariable int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException {
+    @GetMapping("/")
+    public ApiResponse<CartDTO> getCart(HttpSession httpSession) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException, InsufficientProductException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
+        int user_id = Integer.parseInt(obj.toString());
         return ApiResponse.success(cartService.getCart(user_id), "Cart for user having user id : " + user_id);
     }
 
     @PostMapping
-    public ApiResponse<CartDTO> createCart(@RequestBody CreateCartDTO createCartDTO) throws SQLException, UserNotExistsException, ProductNotFoundException, CartNotExistsException, UserNotFoundException {
-        return ApiResponse.success(cartService.createCart(createCartDTO), "CartItem added successfully!");
+    public ApiResponse<CartDTO> createCart(@RequestBody CreateCartDTO createCartDTO, HttpSession httpSession) throws SQLException, UserNotExistsException, ProductNotFoundException, CartNotExistsException, UserNotFoundException, InsufficientProductException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized!");
+        int user_id = Integer.parseInt(obj.toString());
+        return ApiResponse.success(cartService.createCart(createCartDTO, user_id), "CartItem added successfully!");
     }
 
-    @GetMapping("/checkout/{user_id}")
-    public ApiResponse<OrderDetailDTO> checkout(@PathVariable int user_id) throws UserNotFoundException, CartNotExistsException, SQLException, InsufficientProductException, ProductNotFoundException {
+    @GetMapping("/checkout/")
+    public ApiResponse<OrderDetailDTO> checkout(HttpSession httpSession) throws UserNotFoundException, CartNotExistsException, SQLException, InsufficientProductException, ProductNotFoundException, UserNotExistsException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
+        int user_id = Integer.parseInt(obj.toString());
         return ApiResponse.success(cartService.checkout(user_id), "Checkout user successfully having user id : "+user_id);
     }
 }

@@ -10,6 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateCartDTO {
-    private int user_id;
     List<CreateCartItemDTO> createCartItemDTOList;
 }

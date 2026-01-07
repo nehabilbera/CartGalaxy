@@ -4,6 +4,8 @@ import com.example.CartGalaxy.cart.model.CartItemDTO;
 import com.example.CartGalaxy.product.dao.ProductDAO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.product.model.ProductDTO;
+import com.example.CartGalaxy.stock.dao.StockDAO;
+import com.example.CartGalaxy.stock.exception.InsufficientProductException;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -18,11 +20,13 @@ import java.util.List;
 public class CartItemDAOImpl implements CartItemDAO{
 
     private final ProductDAO productDAO;
+    private final StockDAO stockDAO;
     private static Connection conn;
     private final DataSource dataSource;
 
-    public CartItemDAOImpl(ProductDAO productDAO, DataSource dataSource) throws SQLException {
+    public CartItemDAOImpl(ProductDAO productDAO, StockDAO stockDAO, DataSource dataSource) throws SQLException {
         this.productDAO = productDAO;
+        this.stockDAO = stockDAO;
         this.dataSource = dataSource;
         if(conn == null){
             conn = dataSource.getConnection();
@@ -31,7 +35,7 @@ public class CartItemDAOImpl implements CartItemDAO{
     }
 
     @Override
-    public List<CartItemDTO> getAllCartItems(int user_id) throws SQLException, ProductNotFoundException {
+    public List<CartItemDTO> getAllCartItems(int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
         List<CartItemDTO> cartItemList = new ArrayList<>();
         String query = "SELECT product_id, SUM(quantity) AS quantity FROM cartItems WHERE user_id = ? GROUP BY product_id";
         PreparedStatement ptst = conn.prepareStatement(query);
@@ -42,6 +46,10 @@ public class CartItemDAOImpl implements CartItemDAO{
             int productId = rs.getInt("product_id");
             ProductDTO pdt = productDAO.getProduct(productId);
             int quantity = rs.getInt("quantity");
+            if(stockDAO.getStock(productId).getAvailable_quantity() < quantity) {
+                System.out.println("stock isssssssssssss : "+stockDAO.getStock(productId).getAvailable_quantity()+"\nquantity : "+quantity);
+                throw new InsufficientProductException("Insufficient stock for product having product id : " + productId);
+            }
             CartItemDTO cartItemDTO = new CartItemDTO(
                     pdt,
                     quantity

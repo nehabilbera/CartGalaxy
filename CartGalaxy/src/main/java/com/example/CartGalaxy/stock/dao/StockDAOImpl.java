@@ -57,6 +57,7 @@ public class StockDAOImpl implements StockDAO{
         return stockList;
     }
 
+    //todo: stock not available exception for existing product
     @Override
     public StockDTO getStock(int product_id) throws SQLException, ProductNotFoundException {
         String query = "SELECT * FROM stocks WHERE product_id=?";
@@ -83,15 +84,28 @@ public class StockDAOImpl implements StockDAO{
     @Override
     public List<StockDTO> createStock(List<CreateStockDTO> stocks) throws SQLException {
         for(CreateStockDTO stock : stocks){
-            String query = "INSERT INTO stocks (product_id, available_quantity, total_quantity) " +
-                    "VALUES (?, ?, ?)";
-            PreparedStatement ptst = conn.prepareStatement(query);
-            ptst.setInt(1, stock.getProduct_id());
-            ptst.setInt(2, stock.getTotal_quantity());
-            ptst.setInt(3, stock.getTotal_quantity());
+            try{
+                StockDTO st = getStock(stock.getProduct_id());
+                String query = "UPDATE stocks SET available_quantity = available_quantity + ?, total_quantity = total_quantity + ? WHERE product_id = ?";
+                PreparedStatement ptst = conn.prepareStatement(query);
+                ptst.setInt(1, stock.getTotal_quantity());
+                ptst.setInt(2, stock.getTotal_quantity());
+                ptst.setInt(3, stock.getProduct_id());
+                ptst.executeUpdate();
+                ptst.close();
 
-            ptst.executeUpdate();
-            ptst.close();
+            }
+            catch (ProductNotFoundException e) {
+                String query = "INSERT INTO stocks (product_id, available_quantity, total_quantity) " + "VALUES (?, ?, ?)";
+                PreparedStatement ptst = conn.prepareStatement(query);
+                ptst.setInt(1, stock.getProduct_id());
+                ptst.setInt(2, stock.getTotal_quantity());
+                ptst.setInt(3, stock.getTotal_quantity());
+
+                ptst.executeUpdate();
+                ptst.close();
+            }
+
         }
 
         List<StockDTO> stockList = new ArrayList<>();
@@ -116,7 +130,9 @@ public class StockDAOImpl implements StockDAO{
     }
 
     @Override
-    public Stock updateStock(Stock update_stock, int product_id) {
+    public StockDTO updateStock(CreateStockDTO update_stock) throws SQLException, ProductNotFoundException {
+
+
         return null;
     }
 }

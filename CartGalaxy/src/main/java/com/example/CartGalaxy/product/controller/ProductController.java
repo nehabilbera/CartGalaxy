@@ -6,7 +6,10 @@ import com.example.CartGalaxy.product.model.UpdateProductDTO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.common.model.ApiResponse;
 import com.example.CartGalaxy.product.service.ProductService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -33,22 +36,30 @@ public class ProductController {
     }
 
     @PostMapping
-    public ApiResponse<List<ProductDTO>> addProducts(@RequestBody List<CreateProductDTO> products) throws SQLException {
+    public ApiResponse<List<ProductDTO>> addProducts(@RequestBody List<CreateProductDTO> products, HttpSession httpSession) throws SQLException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(productService.addProducts(products), "Products added");
     }
 
     @PutMapping
-    public ApiResponse<List<ProductDTO>> updateProductList(@RequestBody List<UpdateProductDTO> update_products){
+    public ApiResponse<List<ProductDTO>> updateProductList(@RequestBody List<UpdateProductDTO> update_products, HttpSession httpSession){
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(productService.updateProductList(update_products), "Updated products");
     }
 
     @PutMapping("/{product_id}")
-    public ApiResponse<ProductDTO> updateProduct(@RequestBody UpdateProductDTO update_product, @PathVariable int product_id){
+    public ApiResponse<ProductDTO> updateProduct(@RequestBody UpdateProductDTO update_product, @PathVariable int product_id, HttpSession httpSession){
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(productService.updateProduct(update_product, product_id), "Update product having product id : " + product_id);
     }
 
     @DeleteMapping("/{product_id}")
-    public ApiResponse<String> deleteProduct(@PathVariable int product_id) throws SQLException, ProductNotFoundException {
+    public ApiResponse<String> deleteProduct(@PathVariable int product_id, HttpSession httpSession) throws SQLException, ProductNotFoundException {
+        Object obj = httpSession.getAttribute("USER_ID");
+        if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(productService.deleteProduct(product_id), "Delete product having product id : " + product_id);
     }
 }

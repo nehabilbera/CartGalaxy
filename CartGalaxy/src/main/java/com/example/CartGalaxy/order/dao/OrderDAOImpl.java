@@ -1,6 +1,9 @@
 package com.example.CartGalaxy.order.dao;
 
 import com.example.CartGalaxy.cart.dao.CartDAO;
+import com.example.CartGalaxy.cart.exception.CartNotExistsException;
+import com.example.CartGalaxy.cart.exception.UserNotExistsException;
+import com.example.CartGalaxy.cart.model.CartDTO;
 import com.example.CartGalaxy.order.model.*;
 import com.example.CartGalaxy.product.dao.ProductDAO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
@@ -63,6 +66,7 @@ public class OrderDAOImpl implements OrderDAO{
         return orderList;
     }
 
+    //todo: incorrect order exception
     @Override
     public OrderDetailDTO getOrder(String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
         List<OrderItemDTO> orderItems;
@@ -88,8 +92,9 @@ public class OrderDAOImpl implements OrderDAO{
     //todo: make use of atomicity transaction --- savepoint, rollback, commit
     //todo: make use of db lock to perform database manipulation
     @Override
-    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO) throws SQLException, ProductNotFoundException, InsufficientProductException {
+    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO, int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException, CartNotExistsException, UserNotExistsException {
 
+        if(cartDAO.getCart(user_id)==null) return null;
         float total_amount = 0;
         try {
             conn.setAutoCommit(false);
@@ -97,7 +102,7 @@ public class OrderDAOImpl implements OrderDAO{
             PreparedStatement ptst = conn.prepareStatement(query);
             String order_id = generateOrderId();
             ptst.setString(1, order_id);
-            ptst.setInt(2, orderDTO.getUser_id());
+            ptst.setInt(2, user_id);
             ptst.setDate(3, Date.valueOf(LocalDate.now()));
             ptst.setString(4, "PLACED");
             ptst.setFloat(5, total_amount);
@@ -123,17 +128,28 @@ public class OrderDAOImpl implements OrderDAO{
 
                 ptst2.executeUpdate();
                 ptst2.close();
+
+
+                String reduce_stock = "UPDATE stocks SET available_quantity = available_quantity - ? " +
+                        "WHERE product_id = ?";
+                PreparedStatement ptst3 = conn.prepareStatement(reduce_stock);
+                ptst3.setInt(1, quantity);
+                ptst3.setInt(2, product_id);
+                ptst3.executeUpdate();
+                ptst3.close();
             }
 
-            PreparedStatement ptst3 = conn.prepareStatement(
+
+            PreparedStatement ptst4 = conn.prepareStatement(
                     "UPDATE orders SET transaction_amount = ? WHERE order_id = ?"
             );
-            ptst3.setFloat(1, total_amount);
-            ptst3.setString(2, order_id);
-            ptst3.executeUpdate();
-            ptst3.close();
+            ptst4.setFloat(1, total_amount);
+            ptst4.setString(2, order_id);
+            ptst4.executeUpdate();
+            ptst4.close();
 
-            cartDAO.deleteCart(orderDTO.getUser_id());
+            cartDAO.deleteCart(user_id);
+
             conn.commit();
             conn.setAutoCommit(true);
             return getOrder(order_id);

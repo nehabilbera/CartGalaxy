@@ -5,7 +5,6 @@ import com.example.CartGalaxy.cart.dao.CartItemDAO;
 import com.example.CartGalaxy.cart.exception.CartNotExistsException;
 import com.example.CartGalaxy.cart.exception.UserNotExistsException;
 import com.example.CartGalaxy.cart.model.CartDTO;
-import com.example.CartGalaxy.cart.model.CartItem;
 import com.example.CartGalaxy.cart.model.CartItemDTO;
 import com.example.CartGalaxy.cart.model.CreateCartDTO;
 import com.example.CartGalaxy.order.dao.OrderDAO;
@@ -39,20 +38,20 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public CartDTO getCart(int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException {
+    public CartDTO getCart(int user_id) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException, InsufficientProductException {
         return cartDAO.getCart(user_id);
     }
 
     @Override
-    public CartDTO createCart(CreateCartDTO createCartDTO) throws SQLException, UserNotExistsException, ProductNotFoundException, CartNotExistsException, UserNotFoundException {
-        if (cartDAO.cartExists(createCartDTO.getUser_id())) {
-            return cartDAO.updateCart(createCartDTO);
+    public CartDTO createCart(CreateCartDTO createCartDTO, int user_id) throws SQLException, UserNotExistsException, ProductNotFoundException, CartNotExistsException, UserNotFoundException, InsufficientProductException {
+        if (cartDAO.cartExists(user_id)) {
+            return cartDAO.updateCart(createCartDTO, user_id);
         }
-        return cartDAO.createCart(createCartDTO);
+        return cartDAO.createCart(createCartDTO, user_id);
     }
 
     @Override
-    public OrderDetailDTO checkout(int user_id) throws UserNotFoundException, SQLException, CartNotExistsException, ProductNotFoundException, InsufficientProductException {
+    public OrderDetailDTO checkout(int user_id) throws UserNotFoundException, SQLException, CartNotExistsException, ProductNotFoundException, InsufficientProductException, UserNotExistsException {
         UserDTO userCheck = userDAO.getUserById(user_id);
         Boolean cartCheck = cartDAO.cartExists(user_id);
         List<CartItemDTO> cartItemDTO = cartItemDAO.getAllCartItems(user_id);
@@ -70,8 +69,7 @@ public class CartServiceImpl implements CartService{
         }
 
         CreateOrderDTO createOrderDTO = new CreateOrderDTO();
-        createOrderDTO.setUser_id(user_id);
         createOrderDTO.setOrder_items(createOrderItemDTOList);
-        return orderDAO.createOrder(createOrderDTO);
+        return orderDAO.createOrder(createOrderDTO, user_id);
     }
 }
