@@ -1,8 +1,10 @@
 package com.example.CartGalaxy.user.dao;
 
+import com.example.CartGalaxy.user.exception.PasswordNotMatchException;
 import com.example.CartGalaxy.user.exception.UserNotFoundException;
 import com.example.CartGalaxy.user.model.CreateUserDTO;
 import com.example.CartGalaxy.user.model.LoginUserDTO;
+import com.example.CartGalaxy.user.model.UserChangePasswordDTO;
 import com.example.CartGalaxy.user.model.UserDTO;
 import org.springframework.stereotype.Repository;
 
@@ -83,5 +85,23 @@ public class UserDAOImpl implements UserDAO{
         ptst.setString(2, userDTO.getUser_password());
         ResultSet rs = ptst.executeQuery();
         return rs.next();
+    }
+
+    @Override
+    public void changePassword(UserChangePasswordDTO userChangePasswordDTO, String user_email) throws PasswordNotMatchException, SQLException {
+        String new_password = userChangePasswordDTO.getNew_password();
+        String confirm_password = userChangePasswordDTO.getConfirm_password();
+        if(new_password.equals(confirm_password)){
+            String query = "UPDATE users SET user_password = ? WHERE user_email = ?";
+            PreparedStatement ptst = conn.prepareStatement(query);
+            ptst.setString(1, new_password);
+            ptst.setString(2, user_email);
+            ptst.executeUpdate();
+            ptst.close();
+        }
+        else{
+            throw new PasswordNotMatchException("Password does not match!");
+        }
+
     }
 }

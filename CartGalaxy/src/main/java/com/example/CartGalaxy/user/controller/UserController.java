@@ -2,12 +2,10 @@ package com.example.CartGalaxy.user.controller;
 
 import com.example.CartGalaxy.common.model.ApiResponse;
 import com.example.CartGalaxy.user.exception.InvalidUserCredentialException;
+import com.example.CartGalaxy.user.exception.PasswordNotMatchException;
 import com.example.CartGalaxy.user.exception.UserAlreadyExistsException;
 import com.example.CartGalaxy.user.exception.UserNotFoundException;
-import com.example.CartGalaxy.user.model.CreateUserDTO;
-import com.example.CartGalaxy.user.model.LoginUserDTO;
-import com.example.CartGalaxy.user.model.User;
-import com.example.CartGalaxy.user.model.UserDTO;
+import com.example.CartGalaxy.user.model.*;
 import com.example.CartGalaxy.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -53,6 +51,16 @@ public class UserController {
         Object obj = httpSession.getAttribute("USER_EMAIL");
         if(obj!=null){
             return obj.toString();
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your are not authorized!");
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@RequestBody UserChangePasswordDTO userChangePasswordDTO, HttpSession httpSession) throws SQLException, PasswordNotMatchException {
+        Object obj = httpSession.getAttribute("USER_EMAIL");
+        if(obj!=null){
+            userService.changePassword(userChangePasswordDTO, obj.toString());
+            return "Password Changed successfully for user : "+obj.toString();
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your are not authorized!");
     }

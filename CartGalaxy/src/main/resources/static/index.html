@@ -61,6 +61,18 @@
     <button onclick="apiCall('/users/logout','POST', null, 'userLogoutOut')">Logout User</button>
     <div id="userLogoutOut" class="output"></div>
 
+    <!-- CHANGE PASSWORD -->
+    <h4>Change Password</h4>
+    <textarea id="changePasswordJson">
+{
+"user_email": "john@example.com",
+"old_password": "12345",
+"new_password": "67890"
+}
+    </textarea>
+    <button onclick="apiCall('/users/changePassword','POST','changePasswordJson','changePasswordOut')">Change Password</button>
+    <div id="changePasswordOut" class="output"></div>
+
     <button onclick="apiCall('/users/','GET', null, 'userOut')">Get Current User</button>
     <div id="userOut" class="output"></div>
 </div>

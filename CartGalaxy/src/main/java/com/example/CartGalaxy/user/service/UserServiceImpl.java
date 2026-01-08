@@ -2,10 +2,12 @@ package com.example.CartGalaxy.user.service;
 
 import com.example.CartGalaxy.user.dao.UserDAO;
 import com.example.CartGalaxy.user.exception.InvalidUserCredentialException;
+import com.example.CartGalaxy.user.exception.PasswordNotMatchException;
 import com.example.CartGalaxy.user.exception.UserAlreadyExistsException;
 import com.example.CartGalaxy.user.exception.UserNotFoundException;
 import com.example.CartGalaxy.user.model.CreateUserDTO;
 import com.example.CartGalaxy.user.model.LoginUserDTO;
+import com.example.CartGalaxy.user.model.UserChangePasswordDTO;
 import com.example.CartGalaxy.user.model.UserDTO;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +40,10 @@ public class UserServiceImpl implements UserService{
             throw new InvalidUserCredentialException("Invalid Username or Password Credential");
         }
         return userDAO.getUserByEmail(userDTO.getUser_email());
+    }
+
+    @Override
+    public void changePassword(UserChangePasswordDTO userChangePasswordDTO, String user_email) throws SQLException, PasswordNotMatchException {
+        userDAO.changePassword(userChangePasswordDTO, user_email);
     }
 }
