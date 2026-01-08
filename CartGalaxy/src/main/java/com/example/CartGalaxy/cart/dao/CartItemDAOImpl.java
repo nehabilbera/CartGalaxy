@@ -6,6 +6,7 @@ import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.product.model.ProductDTO;
 import com.example.CartGalaxy.stock.dao.StockDAO;
 import com.example.CartGalaxy.stock.exception.InsufficientProductException;
+import com.example.CartGalaxy.stock.exception.StockNotPresentForExistingProductException;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -35,7 +36,7 @@ public class CartItemDAOImpl implements CartItemDAO{
     }
 
     @Override
-    public List<CartItemDTO> getAllCartItems(int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
+    public List<CartItemDTO> getAllCartItems(int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException, StockNotPresentForExistingProductException {
         List<CartItemDTO> cartItemList = new ArrayList<>();
         String query = "SELECT product_id, SUM(quantity) AS quantity FROM cartItems WHERE user_id = ? GROUP BY product_id";
         PreparedStatement ptst = conn.prepareStatement(query);

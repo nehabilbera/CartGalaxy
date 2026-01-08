@@ -74,7 +74,7 @@
 
     <h4>Create Product</h4>
     <textarea id="createProductJson">
-{
+[{
 "product_name": "Laptop",
 "brand": "HP",
 "category": "Electronics",
@@ -82,7 +82,7 @@
 "discounted_price": 45000,
 "availability": true,
 "image": "sample.jpg"
-}
+}]
     </textarea>
     <button onclick="apiCall('/products','POST','createProductJson','createProductOut')">Add Product</button>
     <div id="createProductOut" class="output"></div>
@@ -102,10 +102,10 @@
 
     <h4>Add Stock</h4>
     <textarea id="createStockJson">
-{
+[{
 "product_id": 1,
-"quantity": 100
-}
+"total_quantity": 100
+}]
     </textarea>
     <button onclick="apiCall('/stocks','POST','createStockJson','createStockOut')">Add Stock</button>
     <div id="createStockOut" class="output"></div>

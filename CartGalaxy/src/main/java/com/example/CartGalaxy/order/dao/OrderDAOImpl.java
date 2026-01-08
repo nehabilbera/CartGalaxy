@@ -3,13 +3,15 @@ package com.example.CartGalaxy.order.dao;
 import com.example.CartGalaxy.cart.dao.CartDAO;
 import com.example.CartGalaxy.cart.exception.CartNotExistsException;
 import com.example.CartGalaxy.cart.exception.UserNotExistsException;
-import com.example.CartGalaxy.cart.model.CartDTO;
+import com.example.CartGalaxy.order.Exception.InvalidOrderIdException;
+import com.example.CartGalaxy.order.Exception.OrderNotExistsForExistingUser;
 import com.example.CartGalaxy.order.model.*;
 import com.example.CartGalaxy.product.dao.ProductDAO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.product.model.ProductDTO;
 import com.example.CartGalaxy.stock.dao.StockDAO;
 import com.example.CartGalaxy.stock.exception.InsufficientProductException;
+import com.example.CartGalaxy.stock.exception.StockNotPresentForExistingProductException;
 import com.example.CartGalaxy.stock.model.StockDTO;
 import org.springframework.stereotype.Repository;
 
@@ -45,35 +47,42 @@ public class OrderDAOImpl implements OrderDAO{
     }
 
     @Override
-    public List<OrderDTO> getOrderList() throws SQLException {
+    public List<OrderDTO> getOrderList(int user_id) throws SQLException, OrderNotExistsForExistingUser {
         System.out.println("DAO");
         List<OrderDTO> orderList = new ArrayList<>();
-        String query = "SELECT * FROM orders";
+        String query = "SELECT * FROM orders WHERE user_id=?";
         PreparedStatement ptst = conn.prepareStatement(query);
+        ptst.setInt(1, user_id);
         ResultSet rs = ptst.executeQuery();
 
-        while(rs.next()){
-            OrderDTO ord = new OrderDTO(
-                    rs.getString("order_id"),
-                    rs.getDate("ordered_date").toLocalDate(),
-                    rs.getString("status"),
-                    rs.getFloat("transaction_amount")
-            );
-            orderList.add(ord);
+        if(!rs.isBeforeFirst()){
+            rs.close();
+            throw new OrderNotExistsForExistingUser("Order not found for existing user having user_id : "+user_id);
         }
-        rs.close();
-        System.out.println("Return DAO");
-        return orderList;
+            while (rs.next()) {
+                OrderDTO ord = new OrderDTO(
+                        rs.getString("order_id"),
+                        rs.getDate("ordered_date").toLocalDate(),
+                        rs.getString("status"),
+                        rs.getFloat("transaction_amount")
+                );
+                orderList.add(ord);
+            }
+            rs.close();
+            System.out.println("Return DAO");
+            return orderList;
+
     }
 
-    //todo: incorrect order exception
+
     @Override
-    public OrderDetailDTO getOrder(String order_id) throws SQLException, ProductNotFoundException, InsufficientProductException {
+    public OrderDetailDTO getOrder(String order_id, int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException, StockNotPresentForExistingProductException, InvalidOrderIdException {
         List<OrderItemDTO> orderItems;
         orderItems = orderItemDAO.getOrderItemList(order_id);
-        String query = "SELECT * FROM orders WHERE order_id= ?";
+        String query = "SELECT * FROM orders WHERE order_id= ? AND user_id=?";
         PreparedStatement ptst = conn.prepareStatement(query);
         ptst.setString(1, order_id);
+        ptst.setInt(2, user_id);
         ResultSet rs = ptst.executeQuery();
 
         OrderDetailDTO orderDetail = new OrderDetailDTO();
@@ -85,14 +94,16 @@ public class OrderDAOImpl implements OrderDAO{
             orderDetail.setTransaction_amount(rs.getFloat("transaction_amount"));
             orderDetail.setOrder_items(orderItems);
         }
+        else{
+            throw new InvalidOrderIdException("Order Id : "+order_id+" is invalid");
+        }
         rs.close();
         return orderDetail;
     }
 
-    //todo: make use of atomicity transaction --- savepoint, rollback, commit
     //todo: make use of db lock to perform database manipulation
     @Override
-    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO, int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException, CartNotExistsException, UserNotExistsException {
+    public OrderDetailDTO createOrder(CreateOrderDTO orderDTO, int user_id) throws SQLException, ProductNotFoundException, InsufficientProductException, CartNotExistsException, UserNotExistsException, StockNotPresentForExistingProductException, InvalidOrderIdException {
 
         if(cartDAO.getCart(user_id)==null) return null;
         float total_amount = 0;
@@ -152,7 +163,7 @@ public class OrderDAOImpl implements OrderDAO{
 
             conn.commit();
             conn.setAutoCommit(true);
-            return getOrder(order_id);
+            return getOrder(order_id, user_id);
         }
         catch(Exception e){
             conn.rollback();

@@ -1,6 +1,7 @@
 package com.example.CartGalaxy.stock.dao;
 
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
+import com.example.CartGalaxy.stock.exception.StockNotPresentForExistingProductException;
 import com.example.CartGalaxy.stock.model.CreateStockDTO;
 import com.example.CartGalaxy.stock.model.Stock;
 import com.example.CartGalaxy.stock.model.StockDTO;
@@ -57,9 +58,9 @@ public class StockDAOImpl implements StockDAO{
         return stockList;
     }
 
-    //todo: stock not available exception for existing product
+
     @Override
-    public StockDTO getStock(int product_id) throws SQLException, ProductNotFoundException {
+    public StockDTO getStock(int product_id) throws SQLException, ProductNotFoundException, StockNotPresentForExistingProductException {
         String query = "SELECT * FROM stocks WHERE product_id=?";
         PreparedStatement ptst = conn.prepareStatement(query);
         ptst.setInt(1, product_id);
@@ -73,7 +74,7 @@ public class StockDAOImpl implements StockDAO{
             stock.setTotal_quantity(rs.getInt("total_quantity"));
             }
         else{
-            throw new ProductNotFoundException("Product Not found");
+            throw new StockNotPresentForExistingProductException("Stock not present for the existing product having is : " + product_id);
         }
 
         rs.close();
@@ -95,7 +96,7 @@ public class StockDAOImpl implements StockDAO{
                 ptst.close();
 
             }
-            catch (ProductNotFoundException e) {
+            catch (ProductNotFoundException | StockNotPresentForExistingProductException e) {
                 String query = "INSERT INTO stocks (product_id, available_quantity, total_quantity) " + "VALUES (?, ?, ?)";
                 PreparedStatement ptst = conn.prepareStatement(query);
                 ptst.setInt(1, stock.getProduct_id());

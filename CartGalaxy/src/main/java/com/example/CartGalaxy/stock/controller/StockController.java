@@ -6,6 +6,7 @@ import com.example.CartGalaxy.product.model.CreateProductDTO;
 import com.example.CartGalaxy.product.model.ProductDTO;
 import com.example.CartGalaxy.product.model.UpdateProductDTO;
 import com.example.CartGalaxy.product.service.ProductService;
+import com.example.CartGalaxy.stock.exception.StockNotPresentForExistingProductException;
 import com.example.CartGalaxy.stock.model.CreateStockDTO;
 import com.example.CartGalaxy.stock.model.Stock;
 import com.example.CartGalaxy.stock.model.StockDTO;
@@ -37,7 +38,7 @@ public class StockController {
     }
 
     @GetMapping("/{product_id}")
-    public ApiResponse<StockDTO> getStock(@PathVariable int product_id, HttpSession httpSession) throws SQLException, ProductNotFoundException {
+    public ApiResponse<StockDTO> getStock(@PathVariable int product_id, HttpSession httpSession) throws SQLException, ProductNotFoundException, StockNotPresentForExistingProductException {
         Object obj = httpSession.getAttribute("USER_ID");
         if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         return ApiResponse.success(stockService.getStock(product_id), "Get stock having product id : " + product_id);

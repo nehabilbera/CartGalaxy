@@ -4,6 +4,7 @@ import com.example.CartGalaxy.product.dao.ProductDAO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.product.model.ProductDTO;
 import com.example.CartGalaxy.stock.dao.StockDAO;
+import com.example.CartGalaxy.stock.exception.StockNotPresentForExistingProductException;
 import com.example.CartGalaxy.stock.model.CreateStockDTO;
 import com.example.CartGalaxy.stock.model.Stock;
 import com.example.CartGalaxy.stock.model.StockDTO;
@@ -30,7 +31,7 @@ public class StockServiceImpl implements StockService{
     }
 
     @Override
-    public StockDTO getStock(int product_id) throws SQLException, ProductNotFoundException {
+    public StockDTO getStock(int product_id) throws SQLException, ProductNotFoundException, StockNotPresentForExistingProductException {
         return stockDAO.getStock(product_id);
     }
 

@@ -6,9 +6,11 @@ import com.example.CartGalaxy.cart.model.CartDTO;
 import com.example.CartGalaxy.cart.model.CreateCartDTO;
 import com.example.CartGalaxy.cart.service.CartService;
 import com.example.CartGalaxy.common.model.ApiResponse;
+import com.example.CartGalaxy.order.Exception.InvalidOrderIdException;
 import com.example.CartGalaxy.order.model.OrderDetailDTO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
 import com.example.CartGalaxy.stock.exception.InsufficientProductException;
+import com.example.CartGalaxy.stock.exception.StockNotPresentForExistingProductException;
 import com.example.CartGalaxy.user.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,7 @@ public class CartController {
     }
 
     @GetMapping("/")
-    public ApiResponse<CartDTO> getCart(HttpSession httpSession) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException, InsufficientProductException {
+    public ApiResponse<CartDTO> getCart(HttpSession httpSession) throws SQLException, ProductNotFoundException, UserNotExistsException, CartNotExistsException, InsufficientProductException, StockNotPresentForExistingProductException {
         Object obj = httpSession.getAttribute("USER_ID");
         if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         int user_id = Integer.parseInt(obj.toString());
@@ -36,7 +38,7 @@ public class CartController {
     }
 
     @PostMapping
-    public ApiResponse<CartDTO> createCart(@RequestBody CreateCartDTO createCartDTO, HttpSession httpSession) throws SQLException, UserNotExistsException, ProductNotFoundException, CartNotExistsException, UserNotFoundException, InsufficientProductException {
+    public ApiResponse<CartDTO> createCart(@RequestBody CreateCartDTO createCartDTO, HttpSession httpSession) throws SQLException, UserNotExistsException, ProductNotFoundException, CartNotExistsException, UserNotFoundException, InsufficientProductException, StockNotPresentForExistingProductException {
         Object obj = httpSession.getAttribute("USER_ID");
         if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized!");
         int user_id = Integer.parseInt(obj.toString());
@@ -44,7 +46,7 @@ public class CartController {
     }
 
     @GetMapping("/checkout/")
-    public ApiResponse<OrderDetailDTO> checkout(HttpSession httpSession) throws UserNotFoundException, CartNotExistsException, SQLException, InsufficientProductException, ProductNotFoundException, UserNotExistsException {
+    public ApiResponse<OrderDetailDTO> checkout(HttpSession httpSession) throws UserNotFoundException, CartNotExistsException, SQLException, InsufficientProductException, ProductNotFoundException, UserNotExistsException, StockNotPresentForExistingProductException, InvalidOrderIdException {
         Object obj = httpSession.getAttribute("USER_ID");
         if(obj==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized");
         int user_id = Integer.parseInt(obj.toString());
