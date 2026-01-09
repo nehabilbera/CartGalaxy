@@ -27,7 +27,6 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    //todo: show order list according to user_id
     @GetMapping
     public ApiResponse<List<OrderDTO>> getOrderList(HttpSession httpSession) throws SQLException, OrderNotExistsForExistingUser {
         Object obj = httpSession.getAttribute("USER_ID");
@@ -36,7 +35,6 @@ public class OrderController {
         return ApiResponse.success(orderService.getOrdersList(user_id), "Get Order list");
     }
 
-    //todo: show order according to user_id
     @GetMapping("/{order_id}")
     public ApiResponse<OrderDetailDTO> getOrder(@PathVariable String order_id, HttpSession httpSession) throws SQLException, ProductNotFoundException, InsufficientProductException, StockNotPresentForExistingProductException, InvalidOrderIdException {
         Object obj = httpSession.getAttribute("USER_ID");

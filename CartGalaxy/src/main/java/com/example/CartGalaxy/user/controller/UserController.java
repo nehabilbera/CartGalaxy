@@ -1,10 +1,7 @@
 package com.example.CartGalaxy.user.controller;
 
 import com.example.CartGalaxy.common.model.ApiResponse;
-import com.example.CartGalaxy.user.exception.InvalidUserCredentialException;
-import com.example.CartGalaxy.user.exception.PasswordNotMatchException;
-import com.example.CartGalaxy.user.exception.UserAlreadyExistsException;
-import com.example.CartGalaxy.user.exception.UserNotFoundException;
+import com.example.CartGalaxy.user.exception.*;
 import com.example.CartGalaxy.user.model.*;
 import com.example.CartGalaxy.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -39,11 +36,14 @@ public class UserController {
         return user;
     }
 
+
     @PostMapping("/logout")
     public String userLogout(HttpSession httpSession){
-        String user_email = httpSession.getAttribute("USER_EMAIL").toString();
+        Object obj = httpSession.getAttribute("USER_EMAIL");
+        if(obj==null) return "User logout successfully!";
+        String user_email = obj.toString();
         httpSession.invalidate();
-        return "User logout successfully " + user_email;
+        return "User logout successfully!";
     }
 
     @GetMapping("/")
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    public String changePassword(@RequestBody UserChangePasswordDTO userChangePasswordDTO, HttpSession httpSession) throws SQLException, PasswordNotMatchException {
+    public String changePassword(@RequestBody UserChangePasswordDTO userChangePasswordDTO, HttpSession httpSession) throws SQLException, PasswordNotMatchException, InvalidUserCredentialException, PasswordMatchException {
         Object obj = httpSession.getAttribute("USER_EMAIL");
         if(obj!=null){
             userService.changePassword(userChangePasswordDTO, obj.toString());

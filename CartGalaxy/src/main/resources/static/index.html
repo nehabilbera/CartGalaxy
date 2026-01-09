@@ -65,9 +65,9 @@
     <h4>Change Password</h4>
     <textarea id="changePasswordJson">
 {
-"user_email": "john@example.com",
-"old_password": "12345",
-"new_password": "67890"
+"old_password": "abcd",
+"new_password": "12345",
+"confirm_password": "12345"
 }
     </textarea>
     <button onclick="apiCall('/users/changePassword','POST','changePasswordJson','changePasswordOut')">Change Password</button>

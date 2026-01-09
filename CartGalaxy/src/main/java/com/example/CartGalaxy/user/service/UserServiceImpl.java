@@ -1,10 +1,7 @@
 package com.example.CartGalaxy.user.service;
 
 import com.example.CartGalaxy.user.dao.UserDAO;
-import com.example.CartGalaxy.user.exception.InvalidUserCredentialException;
-import com.example.CartGalaxy.user.exception.PasswordNotMatchException;
-import com.example.CartGalaxy.user.exception.UserAlreadyExistsException;
-import com.example.CartGalaxy.user.exception.UserNotFoundException;
+import com.example.CartGalaxy.user.exception.*;
 import com.example.CartGalaxy.user.model.CreateUserDTO;
 import com.example.CartGalaxy.user.model.LoginUserDTO;
 import com.example.CartGalaxy.user.model.UserChangePasswordDTO;
@@ -35,15 +32,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO userLogin(LoginUserDTO userDTO) throws UserNotFoundException, SQLException, InvalidUserCredentialException {
-        Boolean res = userDAO.validateUser(userDTO);
+        Boolean res = userDAO.validateUser(userDTO.getUser_email(), userDTO.getUser_password());
         if(res==false){
             throw new InvalidUserCredentialException("Invalid Username or Password Credential");
         }
         return userDAO.getUserByEmail(userDTO.getUser_email());
     }
 
+
     @Override
-    public void changePassword(UserChangePasswordDTO userChangePasswordDTO, String user_email) throws SQLException, PasswordNotMatchException {
+    public void changePassword(UserChangePasswordDTO userChangePasswordDTO, String user_email) throws SQLException, PasswordNotMatchException, InvalidUserCredentialException, PasswordMatchException {
+        Boolean validateUser = userDAO.validateUser(user_email, userChangePasswordDTO.getOld_password());
+        if(!validateUser) throw new InvalidUserCredentialException("Old password is incorrect");
+
+        if(!userChangePasswordDTO.getNew_password().equals(userChangePasswordDTO.getConfirm_password()))
+            throw new PasswordNotMatchException("Password does not match!");
+
+        if(userChangePasswordDTO.getNew_password().equals(userChangePasswordDTO.getOld_password()))
+            throw new PasswordMatchException("Old password is same as new password");
+
         userDAO.changePassword(userChangePasswordDTO, user_email);
     }
 }
