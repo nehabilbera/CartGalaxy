@@ -1,6 +1,8 @@
 package com.example.CartGalaxy.user.controller;
 
 import com.example.CartGalaxy.common.model.ApiResponse;
+import com.example.CartGalaxy.common.model.SendEmailDTO;
+import com.example.CartGalaxy.common.service.EmailService;
 import com.example.CartGalaxy.user.exception.*;
 import com.example.CartGalaxy.user.model.*;
 import com.example.CartGalaxy.user.service.UserService;
@@ -19,9 +21,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, EmailService emailService) {
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/register")
@@ -38,6 +42,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    //todo: return one time only
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<String>> userLogout(HttpSession httpSession){
         Object obj = httpSession.getAttribute("USER_EMAIL");
@@ -64,5 +69,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null, "Password Changed successfully for user : "+obj.toString()));
         }
         throw new UnauthorizedException("User is not authorized");
+    }
+
+    @PostMapping("/sendEmail")
+    public ResponseEntity<ApiResponse<String>> sendEmail(@RequestBody SendEmailDTO emailDTO){
+        emailService.sendEmail(emailDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null, "Email sent successfully!"));
     }
 }

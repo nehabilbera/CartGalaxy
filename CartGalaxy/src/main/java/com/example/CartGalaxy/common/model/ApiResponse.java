@@ -11,7 +11,7 @@ public record ApiResponse<T> (@JsonInclude(JsonInclude.Include.NON_NULL) T data,
         return apiSuccess;
     }
 
-    public static <T> ApiResponse<T> error(T data, String message){
+    public static <T> ApiResponse<T> error(String message){
         ApiResponse<T> apiError = new ApiResponse<>(null, message, new Date(), "Error");
         return apiError;
     }
