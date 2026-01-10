@@ -7,6 +7,7 @@ import com.example.CartGalaxy.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,44 +25,44 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserDTO userRegistration(@RequestBody CreateUserDTO userDTO) throws SQLException, UserNotFoundException, UserAlreadyExistsException {
-        return userService.userRegistration(userDTO);
+    public ResponseEntity<UserDTO> userRegistration(@RequestBody CreateUserDTO userDTO) throws SQLException, UserNotFoundException, UserAlreadyExistsException {
+        UserDTO res = userService.userRegistration(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 
     @PostMapping("/login")
-    public UserDTO userLogin(@RequestBody LoginUserDTO loginUserDTO, HttpSession httpSession) throws UserNotFoundException, SQLException, InvalidUserCredentialException {
+    public ResponseEntity<UserDTO> userLogin(@RequestBody LoginUserDTO loginUserDTO, HttpSession httpSession) throws UserNotFoundException, SQLException, InvalidUserCredentialException {
         UserDTO user = userService.userLogin(loginUserDTO);
         httpSession.setAttribute("USER_EMAIL", user.getUser_email());
         httpSession.setAttribute("USER_ID", user.getUser_id());
-        return user;
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-
     @PostMapping("/logout")
-    public String userLogout(HttpSession httpSession){
+    public ResponseEntity<ApiResponse<String>> userLogout(HttpSession httpSession){
         Object obj = httpSession.getAttribute("USER_EMAIL");
-        if(obj==null) return "User logout successfully!";
+        if(obj==null) return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null, "User logout successfully!"));
         String user_email = obj.toString();
         httpSession.invalidate();
-        return "User logout successfully!";
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null, "User logout successfully!"));
     }
 
     @GetMapping("/")
-    public String user(HttpSession httpSession){
+    public ResponseEntity<ApiResponse<String>> user(HttpSession httpSession) throws UnauthorizedException {
         Object obj = httpSession.getAttribute("USER_EMAIL");
         if(obj!=null){
-            return obj.toString();
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null,obj.toString()));
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your are not authorized!");
+        throw new UnauthorizedException("User is not authorized");
     }
 
     @PostMapping("/changePassword")
-    public String changePassword(@RequestBody UserChangePasswordDTO userChangePasswordDTO, HttpSession httpSession) throws SQLException, PasswordNotMatchException, InvalidUserCredentialException, PasswordMatchException {
+    public ResponseEntity<ApiResponse<String>> changePassword(@RequestBody UserChangePasswordDTO userChangePasswordDTO, HttpSession httpSession) throws SQLException, PasswordNotMatchException, InvalidUserCredentialException, PasswordMatchException, UnauthorizedException {
         Object obj = httpSession.getAttribute("USER_EMAIL");
         if(obj!=null){
             userService.changePassword(userChangePasswordDTO, obj.toString());
-            return "Password Changed successfully for user : "+obj.toString();
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(null, "Password Changed successfully for user : "+obj.toString()));
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your are not authorized!");
+        throw new UnauthorizedException("User is not authorized");
     }
 }

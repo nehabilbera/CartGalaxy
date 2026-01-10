@@ -165,23 +165,30 @@
 </div>
 
 <script>
-async function apiCall(url, method, inputId, outputId) {
-    let options = { method };
+    async function apiCall(url, method, inputId, outputId) {
+        let options = { method };
 
-    if (method !== "GET" && inputId) {
-        options.headers = { "Content-Type": "application/json" };
-        options.body = document.getElementById(inputId).value;
-    }
+        if (method !== "GET" && inputId) {
+            options.headers = { "Content-Type": "application/json" };
+            options.body = document.getElementById(inputId).value;
+        }
 
-    try {
-        const res = await fetch(url, options);
-        const text = await res.text();
-        document.getElementById(outputId).innerText = text;
-    } catch (e) {
-        document.getElementById(outputId).innerText = "ERROR: " + e;
+        try {
+            const res = await fetch(url, options);
+            const stts = res.status;
+            const json = await res.json(); // <-- parse JSON
+
+            const pretty = JSON.stringify(json, null, 4); // <-- formats nicely
+
+            document.getElementById(outputId).innerText =
+                `${pretty}\nStatus: ${stts}`;
+
+        } catch (e) {
+            document.getElementById(outputId).innerText = "ERROR: " + e;
+        }
     }
-}
 </script>
+
 
 </body>
 </html>

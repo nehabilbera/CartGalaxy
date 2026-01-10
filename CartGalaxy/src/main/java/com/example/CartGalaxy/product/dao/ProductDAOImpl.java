@@ -71,7 +71,7 @@ public class ProductDAOImpl implements ProductDAO{
             product.setAvailability(rs.getBoolean("availability"));
         }
         else{
-            throw new ProductNotFoundException("Product Not found");
+            throw new ProductNotFoundException("Product not found with pdt_id : "+product_id);
         }
         return product;
 
