@@ -75,6 +75,17 @@
 
     <button onclick="apiCall('/users/','GET', null, 'userOut')">Get Current User</button>
     <div id="userOut" class="output"></div>
+
+    <h4>Send Email</h4>
+    <textarea id="sendEmailJson">
+{
+"recipient": "test@example.com",
+"subject": "Welcome to CartGalaxy",
+"text": "Thank you for registering!"
+}
+</textarea>
+    <button onclick="apiCall('/users/sendEmail','POST','sendEmailJson','sendEmailOut')">Send Email</button>
+    <div id="sendEmailOut" class="output"></div>
 </div>
 
 <!-- PRODUCT CONTROLLER -->
