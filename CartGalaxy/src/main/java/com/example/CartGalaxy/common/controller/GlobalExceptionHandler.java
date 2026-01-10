@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CartNotExistsException.class)
     public ResponseEntity<ApiResponse<Object>> handlerCartNotExistsException(CartNotExistsException err){
+        err.printStackTrace();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(err.getMessage()));
     }
 

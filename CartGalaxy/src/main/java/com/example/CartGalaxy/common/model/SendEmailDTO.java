@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class SendEmailDTO {
     private String recipient;
     private String subject;
-    private String text;
+    private Object text;
 }

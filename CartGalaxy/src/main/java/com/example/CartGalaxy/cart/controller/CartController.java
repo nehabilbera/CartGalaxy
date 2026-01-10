@@ -6,6 +6,8 @@ import com.example.CartGalaxy.cart.model.CartDTO;
 import com.example.CartGalaxy.cart.model.CreateCartDTO;
 import com.example.CartGalaxy.cart.service.CartService;
 import com.example.CartGalaxy.common.model.ApiResponse;
+import com.example.CartGalaxy.common.model.SendEmailDTO;
+import com.example.CartGalaxy.common.service.EmailService;
 import com.example.CartGalaxy.order.Exception.InvalidOrderIdException;
 import com.example.CartGalaxy.order.model.OrderDetailDTO;
 import com.example.CartGalaxy.product.exception.ProductNotFoundException;
@@ -26,9 +28,11 @@ import java.sql.SQLException;
 public class CartController {
 
     private final CartService cartService;
+    private final EmailService emailService;
 
-    public CartController(CartService cartService) {
+    public CartController(CartService cartService, EmailService emailService) {
         this.cartService = cartService;
+        this.emailService = emailService;
     }
 
     @GetMapping("/")
@@ -52,9 +56,22 @@ public class CartController {
     @GetMapping("/checkout/")
     public ResponseEntity<ApiResponse<OrderDetailDTO>> checkout(HttpSession httpSession) throws UserNotFoundException, CartNotExistsException, SQLException, InsufficientProductException, UserNotExistsException, StockNotPresentForExistingProductException, InvalidOrderIdException, ProductNotFoundException, UnauthorizedException {
         Object obj = httpSession.getAttribute("USER_ID");
+        Object obj1 = httpSession.getAttribute("USER_EMAIL");
+
         if(obj==null) throw new UnauthorizedException("User is not authorized");
+
         int user_id = Integer.parseInt(obj.toString());
-        ApiResponse<OrderDetailDTO> res = ApiResponse.success(cartService.checkout(user_id), "Checkout user successfully having user id : "+user_id);
+
+        OrderDetailDTO orderDetail = cartService.checkout(user_id);
+
+        ApiResponse<OrderDetailDTO> res = ApiResponse.success(orderDetail, "Checkout user successfully having user id : "+user_id);
+
+        SendEmailDTO emailDTO = new SendEmailDTO();
+        emailDTO.setRecipient(obj1.toString());
+        emailDTO.setSubject("CartGalaxy - Order Confirmation");
+        emailDTO.setText("Your order is on prepration!\n\n"+orderDetail);
+        emailService.sendEmail(emailDTO);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 }
