@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CartGalaxy API Tester</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h2 { margin-top: 40px; }
+        .box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 30px;
+            width: 400px;
+        }
+        input, button, textarea {
+            width: 100%;
+            margin-top: 5px;
+            padding: 8px;
+        }
+        textarea { height: 80px; }
+        .output {
+            white-space: pre-wrap;
+            background: #f2f2f2;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>CartGalaxy API Testing Dashboard</h1>
+<p>Click buttons to test your backend APIs. No Spring Security required.</p>
+
+<hr>
+
+<!-- USER CONTROLLER -->
+<div class="box">
+    <h2>User Controller</h2>
+
+    <h4>Register</h4>
+    <textarea id="userRegisterJson">
+{
+"user_name": "John Doe",
+"user_email": "john@example.com",
+"user_password": "12345"
+}
+    </textarea>
+    <button onclick="apiCall('/users/register','POST', 'userRegisterJson', 'userRegisterOut')">Register User</button>
+    <div id="userRegisterOut" class="output"></div>
+
+    <h4>Login</h4>
+    <textarea id="userLoginJson">
+{
+"user_email": "john@example.com",
+"user_password": "12345"
+}
+    </textarea>
+    <button onclick="apiCall('/users/login','POST', 'userLoginJson', 'userLoginOut')">Login User</button>
+    <div id="userLoginOut" class="output"></div>
+
+    <button onclick="apiCall('/users/logout','POST', null, 'userLogoutOut')">Logout User</button>
+    <div id="userLogoutOut" class="output"></div>
+
+    <!-- CHANGE PASSWORD -->
+    <h4>Change Password</h4>
+    <textarea id="changePasswordJson">
+{
+"old_password": "abcd",
+"new_password": "12345",
+"confirm_password": "12345"
+}
+    </textarea>
+    <button onclick="apiCall('/users/changePassword','POST','changePasswordJson','changePasswordOut')">Change Password</button>
+    <div id="changePasswordOut" class="output"></div>
+
+    <button onclick="apiCall('/users/','GET', null, 'userOut')">Get Current User</button>
+    <div id="userOut" class="output"></div>
+
+    <h4>Send Email</h4>
+    <textarea id="sendEmailJson">
+{
+"recipient": "test@example.com",
+"subject": "Welcome to CartGalaxy",
+"text": "Thank you for registering!"
+}
+</textarea>
+    <button onclick="apiCall('/users/sendEmail','POST','sendEmailJson','sendEmailOut')">Send Email</button>
+    <div id="sendEmailOut" class="output"></div>
+</div>
+
+<!-- PRODUCT CONTROLLER -->
+<div class="box">
+    <h2>Product Controller</h2>
+
+    <button onclick="apiCall('/products','GET', null, 'productsOut')">Get All Products</button>
+    <div id="productsOut" class="output"></div>
+
+    <h4>Create Product</h4>
+    <textarea id="createProductJson">
+[{
+"product_name": "Laptop",
+"brand": "HP",
+"category": "Electronics",
+"selling_price": 50000,
+"discounted_price": 45000,
+"availability": true,
+"image": "sample.jpg"
+}]
+    </textarea>
+    <button onclick="apiCall('/products','POST','createProductJson','createProductOut')">Add Product</button>
+    <div id="createProductOut" class="output"></div>
+
+    <h4>Get Product By ID</h4>
+    <input id="productId" placeholder="Product ID">
+    <button onclick="apiCall('/products/' + document.getElementById('productId').value, 'GET', null, 'productByIdOut')">Fetch Product</button>
+    <div id="productByIdOut" class="output"></div>
+</div>
+
+<!-- STOCK CONTROLLER -->
+<div class="box">
+    <h2>Stock Controller</h2>
+
+    <button onclick="apiCall('/stocks','GET', null, 'stocksOut')">Get All Stock</button>
+    <div id="stocksOut" class="output"></div>
+
+    <h4>Add Stock</h4>
+    <textarea id="createStockJson">
+[{
+"product_id": 1,
+"total_quantity": 100
+}]
+    </textarea>
+    <button onclick="apiCall('/stocks','POST','createStockJson','createStockOut')">Add Stock</button>
+    <div id="createStockOut" class="output"></div>
+
+    <h4>Get Stock by Product ID</h4>
+    <input id="stockProductId" placeholder="Product ID">
+    <button onclick="apiCall('/stocks/' + document.getElementById('stockProductId').value, 'GET', null, 'stockByIdOut')">Fetch Stock</button>
+    <div id="stockByIdOut" class="output"></div>
+</div>
+
+<!-- ORDER CONTROLLER -->
+<div class="box">
+    <h2>Order Controller</h2>
+
+    <button onclick="apiCall('/orders','GET', null, 'ordersOut')">Get All Orders</button>
+    <div id="ordersOut" class="output"></div>
+
+    <h4>Get Order By ID</h4>
+    <input id="orderId" placeholder="Order ID">
+    <button type="button" onclick="apiCall('/orders/' + document.getElementById('orderId').value,'GET',null,'orderByIdOut')">Fetch Order</button>
+    <div id="orderByIdOut" class="output"></div>
+</div>
+
+<!-- CART CONTROLLER -->
+<div class="box">
+    <h2>Cart Controller</h2>
+
+    <h4>Add to Cart</h4>
+    <textarea id="cartJson">
+{
+"createCartItemDTOList": [
+    { "product_id": 1, "quantity": 2 }
+]
+}
+    </textarea>
+    <button onclick="apiCall('/cart','POST','cartJson','cartOut')">Add to Cart</button>
+    <div id="cartOut" class="output"></div>
+
+    <button onclick="apiCall('/cart/','GET',null,'getCartOut')">Get Cart</button>
+    <div id="getCartOut" class="output"></div>
+
+    <button onclick="apiCall('/cart/checkout/','GET',null,'checkoutOut')">Checkout</button>
+    <div id="checkoutOut" class="output"></div>
+</div>
+
+<script>
+    async function apiCall(url, method, inputId, outputId) {
+        let options = { method };
+
+        if (method !== "GET" && inputId) {
+            options.headers = { "Content-Type": "application/json" };
+            options.body = document.getElementById(inputId).value;
+        }
+
+        try {
+            const res = await fetch(url, options);
+            const stts = res.status;
+            const json = await res.json(); // <-- parse JSON
+
+            const pretty = JSON.stringify(json, null, 4); // <-- formats nicely
+
+            document.getElementById(outputId).innerText =
+                `${pretty}\nStatus: ${stts}`;
+
+        } catch (e) {
+            document.getElementById(outputId).innerText = "ERROR: " + e;
+        }
+    }
+</script>
+
+
+</body>
+</html>

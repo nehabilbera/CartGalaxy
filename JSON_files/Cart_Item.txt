@@ -1,0 +1,100 @@
+Cart_Item
+
+GET     ---> /cartItems
+Response Body
+[
+  {
+    "cartItem_id": 1,
+    "cart_id": 10,
+    "product_id": 101,
+    "quantity": 2
+  },
+  {
+    "cartItem_id": 2,
+    "cart_id": 10,
+    "product_id": 102,
+    "quantity": 1
+  }
+]
+
+
+GET     ---> /cartItems/{cartItem_id}
+Response Body
+{
+  "cartItem_id": 1,
+  "cart_id": 10,
+  "product_id": 101,
+  "quantity": 2
+}
+
+
+POST    ---> /cartItems
+Request Body
+{
+  "cart_id": 10,
+  "product_id": 101,
+  "quantity": 2
+}
+
+Response Body
+{
+  "cartItem_id": 1,
+  "cart_id": 10,
+  "product_id": 101,
+  "quantity": 2
+}
+
+
+PUT 	---> /cartItems
+Request Body
+[
+  {
+    "cartItem_id": 1,
+    "cart_id": 10,
+    "product_id": 101,
+    "quantity": 3
+  },
+  {
+    "cartItem_id": 2,
+    "cart_id": 10,
+    "product_id": 102,
+    "quantity": 2
+  }
+]
+
+Response Body
+[
+  {
+    "cartItem_id": 1,
+    "cart_id": 10,
+    "product_id": 101,
+    "quantity": 3
+  },
+  {
+    "cartItem_id": 2,
+    "cart_id": 10,
+    "product_id": 102,
+    "quantity": 2
+  }
+]
+
+
+PUT 	---> /cartItems/{cartItem_id}
+Request Body
+{
+  "cartItem_id": 1,
+  "cart_id": 10,
+  "product_id": 101,
+  "quantity": 4
+}
+
+Response Body
+{
+  "cartItem_id": 1,
+  "cart_id": 10,
+  "product_id": 101,
+  "quantity": 4
+}
+
+
+DELETE 	---> /cartItems/{cartItem_id}

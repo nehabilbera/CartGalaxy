@@ -1,0 +1,134 @@
+Product
+
+GET     ---> /products
+Response Body
+	[
+	 {
+	   "product_id" : 1,
+	   "selling_price" : 789,
+	   "discounted_price" : 686,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url1",
+	   "availability" : true
+	},
+	{
+	   "product_id" : 2,
+	   "selling_price" : 915,
+	   "discounted_price" : 886,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url2",
+	   "availability" : false
+	}
+       ]
+
+
+
+GET     ---> /products/{product_id}
+Response Body
+	 {
+	   "product_id" : 1,
+	   "selling_price" : 789,
+	   "discounted_price" : 686,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url1",
+	   "availability" : true
+	}
+
+
+POST    ---> /products
+Request Body
+	[
+	 {
+	   "selling_price" : 789,
+	   "discounted_price" : 686,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url1",
+	   "availability" : true
+	},
+	{
+	   "selling_price" : 915,
+	   "discounted_price" : 886,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url2",
+	   "availability" : false
+	}
+       ]
+
+Response Body
+	[
+	 {
+	   "product_id" : 3,
+	   "selling_price" : 789,
+	   "discounted_price" : 686,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url1",
+	   "availability" : true
+	},
+	{
+	   "product_id" : 4,
+	   "selling_price" : 915,
+	   "discounted_price" : 886,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url2",
+	   "availability" : false
+	}
+       ]
+
+
+PUT 	---> /products
+Request Body
+	[
+	 {
+	   "product_id" : 1,
+	   "description" : "xyz"
+	 },
+	 {
+	   "product_id" : 2,
+	   "image" : "url4",
+	   "availability" : true
+	 }
+       ]
+
+
+Response Body
+	[
+	 {
+	   "product_id" : 1,
+	   "selling_price" : 789,
+	   "discounted_price" : 686,
+	   "description" : "xyz",
+	   "image" : "url1",
+	   "availability" : true
+	},
+	{
+	   "product_id" : 2,
+	   "selling_price" : 915,
+	   "discounted_price" : 886,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url4",
+	   "availability" : true
+	}
+       ]
+
+
+PUT 	---> /products/{product_id}
+Request Body
+	 {
+	   "product_id" : 1,
+	   "selling_price" : 1179,
+	   "discounted_price" : 1090
+	}
+
+Response Body
+	 {
+	   "product_id" : 1,
+	   "selling_price" : 1179,
+	   "discounted_price" : 1090,
+	   "description" : "Vichitra Silk Women Gawn",
+	   "image" : "url1",
+	   "availability" : true
+	}
+
+
+DELETE 	---> /products/{product_id}
+

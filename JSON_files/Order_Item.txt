@@ -1,0 +1,109 @@
+Order_Item
+GET     ---> /orderItems
+Response Body
+[
+  {
+    "orderItem_id": 1,
+    "order_id": 101,
+    "product_id": 501,
+    "quantity": 2,
+    "price_at_purchase": 499.00
+  },
+  {
+    "orderItem_id": 2,
+    "order_id": 101,
+    "product_id": 502,
+    "quantity": 1,
+    "price_at_purchase": 899.00
+  }
+]
+
+
+GET     ---> /orderItems/{orderItem_id}
+Response Body
+{
+  "orderItem_id": 1,
+  "order_id": 101,
+  "product_id": 501,
+  "quantity": 2,
+  "price_at_purchase": 499.00
+}
+
+
+POST    ---> /orderItems
+Request Body
+{
+  "order_id": 101,
+  "product_id": 501,
+  "quantity": 2,
+  "price_at_purchase": 499.00
+}
+
+Response Body
+{
+  "orderItem_id": 1,
+  "order_id": 101,
+  "product_id": 501,
+  "quantity": 2,
+  "price_at_purchase": 499.00
+}
+
+
+PUT 	---> /orderItemsRequest Body
+[
+  {
+    "orderItem_id": 1,
+    "order_id": 101,
+    "product_id": 501,
+    "quantity": 3,
+    "price_at_purchase": 499.00
+  },
+  {
+    "orderItem_id": 2,
+    "order_id": 101,
+    "product_id": 502,
+    "quantity": 2,
+    "price_at_purchase": 899.00
+  }
+]
+
+Response Body
+[
+  {
+    "orderItem_id": 1,
+    "order_id": 101,
+    "product_id": 501,
+    "quantity": 3,
+    "price_at_purchase": 499.00
+  },
+  {
+    "orderItem_id": 2,
+    "order_id": 101,
+    "product_id": 502,
+    "quantity": 2,
+    "price_at_purchase": 899.00
+  }
+]
+
+
+PUT 	---> /orderItems/{orderItem_id}
+Request Body
+{
+  "orderItem_id": 1,
+  "order_id": 101,
+  "product_id": 501,
+  "quantity": 4,
+  "price_at_purchase": 499.00
+}
+
+Response Body
+{
+  "orderItem_id": 1,
+  "order_id": 101,
+  "product_id": 501,
+  "quantity": 4,
+  "price_at_purchase": 499.00
+}
+
+
+DELETE 	---> /orderItems/{orderItem_id}

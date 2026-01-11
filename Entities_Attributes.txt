@@ -1,0 +1,71 @@
+Admin
+	admin_id
+	name
+	email
+
+
+Product
+	product_id
+	selling_price
+	discounted_price
+	description
+	brand
+	category
+	image
+	availability
+
+
+Stock
+	stock_id
+	product_id
+	available_quantity
+	total_quantity
+
+
+User
+	user_id
+	name
+	phone
+	address
+	city
+	state
+	pincode
+
+
+Cart
+	cart_id
+	user_id
+
+
+Cart_Item
+	cartItem_id
+	cart_id
+	product_id
+	quantity
+
+
+Order
+	order_id
+	user_id
+	ordered_date
+	status
+	transaction_amount
+
+
+Order_Item
+	orderItem_id
+	product_id
+	order_id
+	quantity
+	price_at_purchase
+
+
+Coupon
+	coupon_id
+	code
+	discount
+	total
+	used_count
+	valid_from
+	valid_to
+	user_id
